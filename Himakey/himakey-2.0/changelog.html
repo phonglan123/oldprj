@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Himakey's Changelog</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="./Logo.png" type="image/x-icon">
+		<style>
+			* {
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			.tag {
+				border-radius: 4px;
+				background: red;
+				padding: 4px;
+				display: inline-flex;
+				text-align: center;
+				width: 70px;
+				margin-bottom: 8px;
+			}
+			
+			.change {
+				width: calc(100% - 91px);
+				display: inline-flex;
+				text-align: justify;
+				margin-left: 8px;
+			}
+			a {
+				text-decoration: none;
+			}
+			
+			a:visited {
+				text-decoration: none;
+				color: blue;
+			}
+			
+			a:active {
+				color: orange;
+			}
+			
+			.add {
+				background: #00ff40;
+				border: 1px solid #00ff40;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.remove {
+				background: #ff4d4d;
+				border: 1px solid #ff4d4d;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.fix {
+				background: #4dffff;
+				border: 1px solid #4dffff;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.security {
+				background: #ff7733;
+				border: 1px solid #ff7733;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.upgrade {
+				background: #ffff66;
+				border: 1px solid #ffff66;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.downgrade {
+				background: #c266ff;
+				border: 1px solid #c266ff;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.comingsoon {
+				background: white;
+				border: 1px solid #ccc;
+				box-shadow: 0 0 4px 0 #ccc;
+			}
+			.released {
+				background: black;
+				border: 1px solid #ccc;
+				box-shadow: 0 0 4px 0 #ccc;
+				color: white;
+			}
+			#releasesGithub {
+				padding: 16px;
+				text-align: center;
+				font-size: 20px;
+				color: black;
+				border-radius: 4px;
+				box-shadow: 0 0 32px 0 #ccc;
+				margin: 16px;
+				cursor: pointer;
+			}
+		</style>
+		<script>
+			/*
+				Add
+				Remove
+				Fix
+				Security
+				Upgrade
+				Downgrade
+				Coming soon
+				Released
+			*/
+			var changelog = [
+				["Coming soon", "comingsoon", "Version 3.0: Import/export in excel, acount info (Nickname, avatar, birthday, language, location, Himakey Point,...)"],
+				["Jul 20th 2020", "released", "Released version 2.0!!!"],
+				["Jul 20th 2020", "add", "Multiple choice: Choose multiple questions to perform actions such as deleting, tagging, and color marking to help you manage questions more quickly"],
+				["Jul 17th 2020", "add", "Color/tag: Mark categories or categories by tag or color level level by color. Let's try it"],
+				["Jul 17th 2020", "add", "Search: You're looking for a question in the mess of the question list? Please activate the search function by clicking on the Search button and enter your keyword there."],
+				["Jul 16th 2020", "add", "Language: We support 2 languages are Vietnamese and English. If you do not set a language, we will get your browser language to set. If your browser language is not in the supported languages ​​list, we will automatically display English"],
+				["Jul 16th 2020", "add", "Preview what you have entered: When you enter something in textarea (input box), you can preview it by the button below the textarea."],
+				["Jul 16th 2020", "fix", "Correction of line breaks and a few problems"],
+				["Jul 16th 2020", "add", "Start writing changelog :)"],
+				["Jul 7th 2020", "released", "Released version 1.0!!!"],
+				["Jul 7th 2020", "add", "To compensate for the synchronization feature, Himakey has a data import/export feature to help users to easily transfer data from one device to another"],
+				["Jul 7th 2020", "add", "You can review questions from what you entered, Himakey will arrange questions to review based on difficulty level."],
+				["Jul 7th 2020", "add", "You can add - edit - delete question. This is the most important feature!"],
+			];
+			var changelogHTML = "";
+			for(var index = 0; index < changelog.length; index++) {
+				var tag = "<b class='tag "+changelog[index][1]+"'>" + changelog[index][0] + "</b>";
+				var change = "<div class='change'>" + changelog[index][2] + "</div>";
+				changelogHTML += tag + change;
+			}
+			document.write('<div id="releasesGithub" onclick="window.open('+"'https://github.com/petavietnam/himakey/releases/'"+')">View releases in GitHub</div>' + changelogHTML);
+			//console.log("%cTotal updates: " + changelog.length, "font-weight: bold;");
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

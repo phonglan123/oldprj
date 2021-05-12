@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AES Encryption</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button {
+            width: 100%;
+            background: #ccc;
+            outline: none;
+            padding: 4px;
+            border: 1px solid grey;
+            font-size: 18px;
+            cursor: pointer;
+            background: #ccc;
+            margin-top: -1px;
+        }
+
+        button:active {
+            box-shadow: 0 0 16px 0 #ccc;
+            border: 1px solid #ccc;
+            position: relative;
+        }
+
+        textarea {
+            height: 199px;
+            width: calc(100% - 10px);
+            padding: 4px;
+            overflow: auto;
+            font-family: Arial, Helvetica, sans-serif;
+            outline: none;
+            resize: none;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 12px);
+            padding: 4px;
+            overflow: auto;
+            outline: none;
+            margin-top: -5px;
+        }
+
+        #decryptOuput,
+        #encryptOuput {
+            margin-top: -1px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        #centerThis {
+            text-align: center;
+        }
+
+        #box {
+            border: 1px solid #ccc;
+            padding: 16px;
+            margin-top: -1px;
+            display: inline-block;
+            min-width: 250px;
+            width: calc(50% - 36.3px);
+            background: white;
+            box-shadow: 0 0 8px 0 #ccc;
+        }
+
+    </style>
+    <script src="./CryptoJS.js"></script>
+    <script src="./AESEncryptionindex.js"></script>
+</head>
+
+<body>
+    <div id="centerThis">
+        <div id="box">
+            <h1>Encrypt</h1>
+            <textarea type="text" id="encryptString" placeholder="String need encrypt..."></textarea><br />
+            <input type="text" id="encryptSalt" placeholder="Enter key..." /><br />
+            <button onclick="encrypt()">Click here</button><br />
+            <textarea id="encryptOuput" placeholder="String encrypted..."></textarea><br />
+        </div>
+        <div id="box">
+            <h1>Decrypt</h1>
+            <textarea type="text" id="decryptString" placeholder="String need decrypt..."></textarea><br />
+            <input type="text" id="decryptSalt" placeholder="Enter key..." /><br />
+            <button onclick="decrypt()">Click here</button><br />
+            <textarea id="decryptOuput" placeholder="String decrypted..."></textarea><br />
+        </div>
+    </div>
+</body>
+
+</html>

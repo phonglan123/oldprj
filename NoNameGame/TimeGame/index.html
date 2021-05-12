@@ -1,0 +1,66 @@
+﻿<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="index.js"></script>
+<style>
+    @-webkit-keyframes blackWhite {
+        0% {
+            color: #ccc;
+        }
+
+        50% {
+            color: black;
+        }
+
+        100% {
+            color: #ccc;
+        }
+    }
+
+    @-webkit-keyframes blackWhiteBg {
+        0% {
+            background-position: 0% 50%
+        }
+
+        50% {
+            background-position: 100% 51%
+        }
+
+        100% {
+            background-position: 0% 50%
+        }
+    }
+
+    .bTitle {
+        text-align: justify;
+        -webkit-animation-name: blackWhite;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-duration: 4s;
+        text-align: center;
+        width: 100%;
+        font-weight: bold;
+    }
+
+    .bwBackground {
+        background: linear-gradient(to top right, grey, #ccc, white, #ccc, grey);
+        background-size: 600% 600%;
+        -webkit-animation: blackWhiteBg 4s ease infinite;
+    }
+
+    button:disabled,
+    input:disabled {
+        background: black;
+        color: grey;
+        cursor: not-allowed
+    }
+
+</style>
+
+<div class="bTitle" style="">Xin... chào... đây là trò chơi... thời gian... trò chơi rất đơn giản... <br />
+    bạn chỉ cần số giây vào ô "Nhập thời gian..."... rồi bấm nút Bắt đầu... <br />
+    quá trình "chuyển đổi thời gian thành tiền Tico" sẽ được tiến hành... bằng đúng số giây bạn nhập... <br />
+    trong lúc đang chuyển đổi... nếu bạn chuyển sang tab khác... nó sẽ bị tạm dừng... cho đến khi bạn quay trở lại...<br />
+    Chúc... bạn... may... mắn!!!<br /><br />
+    <font color="green" id="yourTicoElm">BẠN__HIỆN__ĐANG__CÓ__0__TICO</font><br /><br />
+    Nhập thời gian: <input type="number" placeholder="Nhập thời gian..." id="inputTime" value="120" /> <button id="buttonTime" onclick="start()">Bắt đầu</button><br /><br />
+    <i style="color: red" id="timeNoti"></i>
+    <!-- <div id="adsframeDiv" style="margin-left: -100px;"></div> -->
+</div>

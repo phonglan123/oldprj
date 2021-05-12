@@ -1,0 +1,8 @@
+v2.5: New Editor from TinyMCE
+@petavietnam petavietnam released this on Jul 31, 2020 · 14 commits to master since this release
+
+Text editor (WYSIWYG): With this editor (powered by TinyMCE), it will be easier for you to compose content, we also support extremely many great features through this editor. Try it out!
+Himakey point/level: Hope you enjoy it!!! - Icon and idea from Todoist Karma!
+Support import and export data by file, makes sharing data easier (no need to copy, just share files)
+Color mark: Like Tagging :)
+Eliminate data sharing via copying. Because copying is no longer appropriate, we have removed this feature

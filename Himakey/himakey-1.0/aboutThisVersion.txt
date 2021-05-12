@@ -1,0 +1,6 @@
+v1.0 The first version
+@petavietnam petavietnam released this on Jul 19, 2020 · 47 commits to master since this release
+
+You can add - edit - delete question. This is the most important feature!
+You can review questions from what you entered, Himakey will arrange questions to review based on difficulty level
+To compensate for the synchronization feature, Himakey has a data importexport feature to help users to easily transfer data from one device to another

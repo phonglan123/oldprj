@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="deny">
+    <link rel="icon" href="./logo.png">
+    <title>Mẫu trang đăng nhập bằng BCrypt</title>
+    <script src="./bCryptadditional.js" type="text/javascript"></script>
+    <script src="./bCrypt.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="./bCryptaccount_page.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <script>
+        var userList = {};
+
+        function loginCheckFormat() {
+            var username = document.getElementById("loginUsername").value,
+                password = document.getElementById("loginPassword").value,
+                usernameCorrectFormat = username.split(" ").clean("").length == 1,
+                passwordCorrectFormat = password.split(" ").clean("").length == 1,
+                loginStatus = document.getElementById("loginStatus"),
+                loginButton = document.getElementById("loginButton");
+            loginStatus.style.color = "red";
+            if (!usernameCorrectFormat || !passwordCorrectFormat) {
+                loginStatus.innerHTML = "Tên đăng nhập hoặc mật khẩu không được để trống";
+            } else {
+                if (Object.keys(userList).includes(username)) {
+                    loginButton.innerHTML = "Đang đăng nhập...";
+                    loginButton.disabled = true;
+                    loginButton.style.cursor = "not-allowed";
+                    checkPassword(username, password);
+                } else {
+                    loginStatus.innerHTML = "Tên đăng nhập không đúng";
+                }
+            }
+        }
+
+        function checkPassword(username, password) {
+            new Password(userList, username, password).check(function(result) {
+                var loginStatus = document.getElementById("loginStatus");
+                var loginButton = document.getElementById("loginButton");
+                if (result) {
+                    loginStatus.style = "color: green";
+                    loginStatus.innerHTML = "Đăng nhập thành công";
+                    login();
+                } else {
+                    loginButton.innerHTML = "Đăng nhập";
+                    loginButton.disabled = false;
+                    loginButton.style.cursor = "pointer";
+                    loginStatus.style.color = "red";
+                    loginStatus.innerHTML = "Mật khẩu không đúng";
+                }
+            });
+        }
+
+        function login() {
+            alert("Đăng nhập thành công");
+        }
+
+        function changeBackground(feeling) {
+            document.body.style.backgroundImage = "url('./image/background_" + feeling + ".png')";
+        }
+
+        function showHidePassword(button, input) {
+            if (input.type == "text") {
+                input.type = "password";
+                button.innerHTML = '<i class="fa fa-eye-slash"></i>';
+            } else {
+                input.type = "text";
+                button.innerHTML = '<i class="fa fa-eye"></i>';
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="centerThis">
+        <div id="feeling">
+            <img src="./image/emoji_happy.png" onclick="changeBackground('happy')">
+            <img src="./image/emoji_love.png" onclick="changeBackground('love')">
+            <img src="./image/emoji_wow.png" onclick="changeBackground('wow')">
+            <h2> Mẫu trang đăng nhập bằng BCrypt </h2>
+            <img src="./image/emoji_style.png" onclick="changeBackground('feeling')">
+            <img src="./image/emoji_sad.png" onclick="changeBackground('sad')">
+            <img src="./image/emoji_angry.png" onclick="changeBackground('angry')">
+        </div>
+        <br /><br />
+        <div id="form">
+            <b id="header">Đăng nhập</b>
+            <input type="text" name="username" id="loginUsername" placeholder="Tên đăng nhập">
+            <br />
+            <input type="password" name="password" id="loginPassword" placeholder="Mật khẩu">
+            <div onclick="showHidePassword(this, document.getElementById('loginPassword'))" class="showHidePassword" title="Hiển thị/Ẩn mật khẩu"><i class="fa fa-eye-slash"></i></div>
+            <br />
+            <div class="status" id="loginStatus"></div>
+            <button onclick="loginCheckFormat()" id="loginButton">Đăng
+                nhập</button>
+        </div>
+        <br /><br />
+        <div id="form">
+            <b id="header">Hướng dẫn dùng</b>
+            <p style="text-align: justify;">
+                <b>Bước 1: </b>Đơn giản ý mà! Giờ nhé. Bấm Ctrl + Shift + I để mở Chrome DevTools.<br /><br />
+                <b>Bước 2: </b>Chọn tab Console<br /><br />
+                <b>Bước 3: </b>Nhập dòng sau: <br />
+                <code>new Password(userList, <b>username</b>, <b>password</b>).write();</code><br /> - <code><b>username</b></code> là tên đăng nhập<br /> - <code><b>password</b></code> là mật khẩu<br /><br />
+                <b>Bước 4: </b>Nhập tên đăng nhập và mật khẩu vào khung bên trên<br /><br />
+                <b>Bước 5: </b>Để kiểm tra những thông tin được lưu thì nhập dòng sau: <code>console.log(userList);</code><br /><br />
+                <b>Bước 6: </b>Nếu muốn xem mã nguồn thì bấm Ctrl + U là ra ngay!<br /><br />
+                <b>Bước 7: </b>Kéo lên đầu trang. Thấy cái hộp có chữ "Mẫu trang đăng nhập bằng BCrypt" không? Thử bấm vào mấy cái emoji (biểu tượng cảm xúc) bên cạnh nó đê!
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

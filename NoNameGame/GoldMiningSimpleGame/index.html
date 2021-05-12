@@ -1,0 +1,31 @@
+﻿<script src="index.js"></script>
+<div id="adsFrame" style="border: 1px solid #ccc; position: absolute; left: -16px">
+    <!-- <div id="adsframeDiv"></div> -->
+    <!-- <div id="adsframeMining"></div> -->
+    <!-- <div id="adsframeInvest"></div> -->
+</div>
+
+<div style="vertical-align:top; text-align: center">
+    <div id="dashboard" style="width: 350px; height: 230px; border: 1px solid #ccc; box-shadow: 0 0 4px 0 #ccc; padding: 8px; text-align: justify; display: inline-block; margin: 4px; vertical-align: top;">
+        <h3 style="text-align: center">BẢNG THÔNG BÁO</h3>
+        - Không được đóng tab này khi đang trong phiên (đào vàng/đầu tư) nếu không toàn bộ số vàng đang kiếm sẽ bị mất hết <br />
+        - Khi đang trong phiên giao dịch (đầu tư), tỉ giá sẽ được cập nhật mỗi 1 giây <br />
+        <i>Số vàng (tính bằng thỏi) hiện tại của bạn: </i><b id="moneyNoti">96</b>
+    </div>
+
+    <div id="mining" style="width: 350px; height: 230px; border: 1px solid #ccc; box-shadow: 0 0 4px 0 #ccc; padding: 8px; text-align: justify; display: inline-block; margin: 4px; vertical-align: top;">
+        <h3 style="text-align: center">ĐÀO VÀNG</h3>
+        <i>Bạn sẽ mua một phiên đào vàng với giá 16 thỏi để đào vàng trong 4 phút. Hãy chú ý sang số vàng của bạn khi đang trong phiên đào, nó sẽ tăng dần khi máy đào phát hiện vàng đó!</i> <br />
+        <center><button onclick="new Mining()" id="miningButton">Mua một phiên đào</button></center>
+        <b id="miningNoti"></b>
+    </div>
+
+    <div id="invest" style="width: 350px; height: 230px; border: 1px solid #ccc; box-shadow: 0 0 4px 0 #ccc; padding: 8px; text-align: justify; display: inline-block; margin: 4px; vertical-align: top;">
+        <h3 style="text-align: center">ĐẦU TƯ</h3>
+        <i>Bạn sẽ đầu tư một số vàng nhất định, và sau đó, giá trị của vàng có thể tăng hoặc giảm. Hãy bấm nút Kết thúc khi bạn thấy giá vàng hiện tại là hợp ý bạn!</i> <br />
+        Số vàng đầu tư: <input type="number" id="investMoney" style="width: 79px" value="1" />
+        <button onclick="investVar = new Invest()" id="investButton">Đầu tư</button>
+        <button onclick="investVar.endSeason(false)" id="investEndButton" disabled>Kết thúc phiên</button>
+        <b id="investNoti"></b>
+    </div>
+</div>

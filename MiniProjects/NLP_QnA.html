@@ -1,0 +1,26 @@
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/qna"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    String.prototype.answerQuestion = async function(question) {
+        var passage = this.toString(),
+            getAnswer = new Promise(returnResult => qna.load().then(model => model.findAnswers(question, passage).then(answers => returnResult(answers[0].text))));
+        return await getAnswer;
+    }
+
+    async function showAnswer() {
+        document.getElementById("answer").innerHTML = "Waiting...";
+        var timerStart = Date.now(),
+            question = document.getElementById("question").value,
+            passage = document.getElementById("passage").innerHTML,
+            results = new Promise(answer => answer(passage.answerQuestion(question)));
+        document.getElementById("answer").innerHTML = "Answer: " + await results + "</br>Time: " + ((Date.now() - timerStart) / 1000) + "s";
+    }
+
+</script>
+<b>Data</b></br>
+<textarea style="height: 200px; width: 100%" id="passage">Zuckerberg built a website called "Facemash" in 2003 while attending Harvard University. The site was comparable to Hot or Not and used "photos compiled from the online face books of nine Houses, placing two next to each other at a time and asking users to choose the "hotter" person". Facemash attracted 450 visitors and 22,000 photo-views in its first four hours. The site was sent to several campus group listservs, but was shut down a few days later by Harvard administration. Zuckerberg faced expulsion and was charged with breaching security, violating copyrights and violating individual privacy. Ultimately, the charges were dropped. Zuckerberg expanded on this project that semester by creating a social study tool ahead of an art history final exam. He uploaded all art images to a website, each of which was accompanied by a comments section, then shared the site with his classmates  -  Google was founded in September 1998 by Larry Page and Sergey Brin while they were Ph.D. students at Stanford University in California. Together they own about 14 percent of its shares and control 56 percent of the stockholder voting power through supervoting stock. They incorporated Google as a California privately held company on September 4, 1998, in California. Google was then reincorporated in Delaware on October 22, 2002. An initial public offering (IPO) took place on August 19, 2004, and Google moved to its headquarters in Mountain View, California, nicknamed the Googleplex. In August 2015, Google announced plans to reorganize its various interests as a conglomerate called Alphabet Inc. Google is Alphabet's leading subsidiary and will continue to be the umbrella company for Alphabet's Internet interests. Sundar Pichai was appointed CEO of Google, replacing Larry Page who became the CEO of Alphabet.</textarea>
+<b>Question</b></br>
+<textarea style="height: 100px; width: 100%" id="question" style="width: 100%">How many visitors Facemash have attracted in ít first 4 hours</textarea>
+<button onclick="showAnswer()" style="width: 100%">Get answer</button>
+<b id="answer"></b>

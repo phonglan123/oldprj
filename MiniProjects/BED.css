@@ -1,0 +1,112 @@
+body {
+    text-align: center;
+}
+
+.userManual {
+    text-align: left;
+    background: aqua;
+    padding: 4px;
+    border-left: 4px solid grey;
+}
+
+.userManual a {
+    color: blue;
+    text-decoration: none;
+}
+
+.userManual a:visited {
+    color: blue;
+}
+
+.userManual a:active {
+    color: red;
+}
+
+.challengeBox {
+    padding: 4px;
+    width: 20%;
+    min-width: 250px;
+    margin: 4px;
+    box-shadow: 4px 4px 4px 0 #ccc;
+    border: 1px solid #ccc;
+    text-align: left;
+    display: inline-table;
+    background: white;
+}
+
+.challengeBox button {
+    padding: 4px;
+    margin: 4px;
+    box-shadow: 1px 1px 1px 0 #ccc;
+    border: 1px solid #ccc;
+    text-align: center;
+    outline: none;
+    width: calc(100% - 8px);
+    margin-bottom: 8px
+}
+
+.challengeBox button:active {
+    background: grey;
+}
+
+.challengeBox p {
+    height: 160px;
+    text-align: justify;
+    overflow: auto;
+    padding-right: 2px;
+}
+
+.challengeBox img {
+    width: 160px;
+    height: 100px;
+    text-align: center;
+    box-shadow: 0 0 8px 0 grey;
+    margin-top: 12px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.challengeBox p::-webkit-scrollbar {
+    width: 8px;
+    background-color: #ccc;
+}
+
+.challengeBox p::-webkit-scrollbar-thumb {
+    background-color: black;
+}
+
+.backgroundYellow {
+    background: yellow;
+}
+
+#checkIn {
+    padding: 4px;
+    border: 1px solid grey;
+    box-shadow: 0 0 4px 0 grey;
+    width: 100px;
+    display: inline-block;
+    margin: 4px;
+    background: white;
+}
+
+#checkIn button {
+    outline: none;
+    border: 1px solid grey;
+    cursor: pointer;
+    width: calc(100% + 10px);
+    position: sticky;
+    margin-left: -5px;
+    margin-bottom: -10px;
+    padding: 4px;
+    background: none;
+}
+
+#checkIn button:active {
+    background: grey
+}
+
+#checkIn img {
+    width: 100%;
+    height: 80px;
+}

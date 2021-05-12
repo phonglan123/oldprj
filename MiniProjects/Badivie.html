@@ -1,0 +1,232 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        alert("Tên Badivie có nghĩa là 'BẢng ĐIểm VIỆt Nam' nhé!");
+
+        function addSubject(data, rowIndex) {
+            var table = document.getElementById("transcript"),
+                row = table.insertRow(rowIndex),
+                subject = row.insertCell(0),
+                cells = [row.insertCell(1), row.insertCell(2), row.insertCell(3), row.insertCell(4)],
+                average = row.insertCell(5);
+            subject.innerHTML = data[0];
+            cells.forEach((cell, index) => {
+                cell.contentEditable = true;
+                cell.style.cursor = "pointer";
+                cell.onkeyup = () => reCalc(true, rowIndex, index + 1);
+                cell.innerHTML = data[index + 1];
+            });
+        }
+
+        function calcAverage(row) {
+            var cells = document.getElementById("transcript").rows[row].cells,
+                factor1A = cells[1].innerHTML.split(" "),
+                factor1B = cells[2].innerHTML.split(" "),
+                marks = factor1A.concat(factor1B, [cells[3].innerHTML], [cells[3].innerHTML], [cells[4].innerHTML], [cells[4].innerHTML], [cells[4].innerHTML]),
+                subjectsAverage = 0,
+                removedSubject = 0,
+                semesterAverage;
+
+            marks.forEach((mark, index) => marks[index] = Number.parseFloat(mark));
+            if (cells[1].innerHTML != "" && cells[2].innerHTML != "" && cells[3].innerHTML != "" && cells[4].innerHTML != "")
+                cells[5].innerHTML = parseFloat(marks.reduce((a, b) => a + b) / marks.length).toFixed(1);
+            else
+                cells[5].innerHTML = "";
+
+            for (var row = 1; row < (database.length + 1); row++) {
+                var average = document.getElementById("transcript").rows[row].cells[5].innerHTML;
+                if (average == "" && ++removedSubject > 0)
+                    continue;
+                subjectsAverage += parseFloat(average);
+            }
+            semesterAverage = parseFloat(subjectsAverage / (database.length - removedSubject)).toFixed(1);
+            if (semesterAverage.toString() != "NaN")
+                document.getElementById("transcript").rows[database.length + 1].cells[1].innerHTML = "<i>" + semesterAverage + "</i>";
+        }
+
+        function reCalc(cellOnChange, rowIndex, cell) {
+            if (cellOnChange)
+                database[rowIndex - 1][cell] = document.getElementById("transcript").rows[rowIndex].cells[cell].innerHTML;
+            for (var i = 1; i < (database.length + 1); i++)
+                calcAverage(i);
+            localStorage.setItem('myTranscript', JSON.stringify(database));
+        }
+
+        function drawTable() {
+            database.forEach((name, index) => addSubject(name, index + 1));
+            var table = document.getElementById("transcript"),
+                row = table.insertRow(-1),
+                semesterAverage = row.insertCell(0),
+                semesterAverageMark = row.insertCell(1),
+                select = document.getElementById("mySubjects");
+            semesterAverage.colSpan = "5";
+            semesterAverage.innerHTML = "<i><b>Cả học kỳ</b></i>";
+            semesterAverageMark.innerHTML = "";
+            reCalc();
+            for (var i = 0; i < database.length; i++) {
+                var option = document.createElement("option");
+                option.text = database[i][0];
+                option.value = database[i][0];
+                select.add(option);
+            }
+        }
+
+        function planNow() {
+            database.forEach(subject => {
+                if (subject[0] == document.getElementById("mySubjects").value) {
+                    var factor1A = subject[1].split(" "),
+                        factor1B = subject[2].split(" "),
+                        factors = factor1A.length + factor1B.length + 2 + 3;
+
+                    if (document.getElementById("myGoalExam").value == "semester") {
+                        if (subject[1] == "" || subject[2] == "" || subject[3] == "")
+                            document.getElementById("yourGoal").innerHTML = "Đã xảy ra lỗi rùi! Bạn thử kiểm tra xem cột điểm Miệng, 15 phút và Giữa kỳ đã có điểm chưa nhé!";
+                        else {
+                            var marks = factor1A.concat(factor1B, subject[3], subject[3]),
+                                sum = marks.reduce((a, b) => parseFloat(a) + parseFloat(b)),
+                                goal = (document.getElementById("myGoal").value * factors - sum) / 3;
+                            if (goal > 10)
+                                document.getElementById("yourGoal").innerHTML = "Huhu, mục tiêu của bạn có vẻ là hơi khó để đạt được rùi, hay là thử chọn một mục tiêu nhỏ hơn đi!";
+                            else
+                                document.getElementById("yourGoal").innerHTML = "Để đạt được mục tiêu trên, bạn cần đạt điểm bài kiểm tra cuối kỳ môn " + subject[0] + " ít nhất " + parseFloat(goal).toFixed(1) + " điểm";
+                        }
+                    } else {
+                        if (subject[1] == "" || subject[2] == "")
+                            document.getElementById("yourGoal").innerHTML = "Đã xảy ra lỗi rùi! Bạn thử kiểm tra xem cột điểm Miệng, 15 phút đã có điểm chưa nhé!";
+                        else {
+                            var theHighestSemesterMark = 0;
+                            document.getElementById("yourGoal").innerHTML = "";
+                            for (var i = 1; i < 11; i++) {
+                                var marks = factor1A.concat(factor1B, i, i, i),
+                                    sum = marks.reduce((a, b) => parseFloat(a) + parseFloat(b)),
+                                    goal = (document.getElementById("myGoal").value * factors - sum) / 2;
+                                if (goal > 10)
+                                    theHighestSemesterMark = i;
+                                else
+                                    document.getElementById("yourGoal").innerHTML += "<br/>- Nếu bài cuối kì của bạn " + i + " điểm thì bài giữa kì bạn sẽ phải đạt ít nhất " + parseFloat(goal).toFixed(1) + " điểm nếu muốn đạt được mục tiêu!";
+                            }
+                            document.getElementById("yourGoal").innerHTML = "<br/>- Nếu bài cuối kì của bạn thấp hơn " + theHighestSemesterMark + " điểm thì rất khó để đạt được mục tiêu!" + document.getElementById("yourGoal").innerHTML;
+                        }
+                    }
+                }
+            });
+
+        }
+
+        function init() {
+            var storedDatabase = JSON.parse(localStorage.getItem("myTranscript"));
+            if (storedDatabase != undefined)
+                database = storedDatabase;
+            drawTable();
+        }
+
+        var database = [
+            ["Ngữ văn", "", "", "", ""],
+            ["Ngoại ngữ", "", "", "", ""],
+            ["Toán học", "", "", "", ""],
+            ["Vật lí", "", "", "", ""],
+            ["Hóa học", "", "", "", ""],
+            ["Sinh học", "", "", "", ""],
+            ["Lịch sử", "", "", "", ""],
+            ["Địa lí", "", "", "", ""],
+            ["Tin học", "", "", "", ""],
+            ["GDCD", "", "", "", ""]
+        ];
+
+    </script>
+    <style>
+        #transcript,
+        #box {
+            border: 1px solid grey;
+            width: calc(100% - 16px);
+            margin: 8px;
+            text-align: center;
+            box-shadow: 0 0 8px 0 #ccc;
+            border-collapse: collapse;
+        }
+
+        #box {
+            text-align: left;
+            padding: 4px;
+            width: calc(100% - 24px);
+        }
+
+        #transcript td {
+            outline: none;
+            padding: 4px;
+        }
+
+        #transcript td:focus {
+            border: 1px solid black;
+            box-shadow: 0 0 8px 0 grey;
+            cursor: text !important;
+        }
+
+    </style>
+</head>
+
+<body onload="init()">
+    <h1 style="text-align: center;">QUẢN LÝ BẢNG ĐIỂM <sub style="font-size: 14px"><i>(Cấp 2 + 3 không chuyên)</i></sub></h1>
+
+    <div style="text-align: center">Bấm vào các ô tương ứng để thay đổi thông tin (riêng điểm Trung bình, hệ thông sẽ tự động tính cho bạn) <br />
+        Lưu ý: Ngăn cách thập phân bằng dấu chấm, ngăn cách giữa các điểm bằng dấu cách. Ví dụ "điểm 10 và 9,5" ghi là "10 9.5"<br />
+        Tất cả cột điểm, hệ số, cách tính, học lực,... đều được cập nhật theo các văn bản của Bộ GDDT ít nhất cho tới năm 2021<br />
+    </div>
+    <table id="transcript" border="1">
+        <tr>
+            <th style="background: #ccc;">Môn học</th>
+            <th style="background: #ccc;">Miệng</th>
+            <th style="background: #ccc;">15 phút</th>
+            <th style="background: #ccc;">Giữa kỳ</th>
+            <th style="background: #ccc;">Cuối kỳ</th>
+            <th style="background: #ccc;">Trung bình</th>
+        </tr>
+    </table>
+
+    <div id="box">
+        <h1 style="margin-top: 0; margin-bottom: 12px; text-align: center;">Tạo kế hoạch học phù hợp</h1>
+        Mình muốn đạt <input type="number" id="myGoal" min="0" max="10" value="10" style="width: 50px" step="0.25"> điểm trung bình ở môn <select id="mySubjects"></select>, tính giúp mình điểm kiểm tra <select id="myGoalExam">
+            <option value="mid-semester">Giữa kỳ</option>
+            <option value="semester">Cuối kỳ</option>
+        </select> "như ý" nhé!
+        <button onclick="planNow()" style="cursor: pointer">Okay, xong rùi thì bấm vào đây nè!</button><br />
+        <hr />
+        <b>Kế hoạch phù hợp với bạn là:</b> <i id="yourGoal">Vui lòng hoàn thành các ô phía trên (đừng quên bấm nút) để tìm ra kế hoạch phù hợp!</i>
+    </div>
+
+    <div id="box">
+        <h1 style="margin-top: 0; margin-bottom: 12px; text-align: center;">Xem học lực của bạn</h1>
+        <i>Trong tương lai, chúng "tui" sẽ phát triển hệ thống tự động xét học lực của bạn. Nhưng hiện tại, bạn có thể xem cách xét học lực như ở dưới đây (được tham khảo từ <a href="https://danluat.thuvienphapluat.vn/tieu-chuan-danh-gia-xep-loai-hoc-luc-cua-hoc-sinh-thcs-thpt-nam-2021-192588.aspx">Thư viện pháp luật</a>)</i><br />
+        <b>Giỏi:</b><br />
+        - Điểm trung bình các môn học từ 8,0 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 8,0 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 8,0 trở lên.<br />
+        - Không có môn học nào điểm trung bình dưới 6,5.<br />
+        - Các môn học đánh giá bằng nhận xét đạt loại Đ.<br />
+        <b>Khá:</b><br />
+        - Điểm trung bình các môn học từ 6,5 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 6,5 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 6,5 trở lên.<br />
+        - Không có môn học nào điểm trung bình dưới 5,0.<br />
+        - Các môn học đánh giá bằng nhận xét đạt loại Đ.<br />
+        <b>Trung bình:</b><br />
+        - Điểm trung bình các môn học từ 5,0 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 5,0 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 5,0 trở lên.<br />
+        - Không có môn học nào điểm trung bình dưới 3,5.<br />
+        - Các môn học đánh giá bằng nhận xét đạt loại Đ.<br />
+        <b>Yếu:</b> Điểm trung bình các môn học từ 3,5 trở lên, không có môn học nào điểm trung bình dưới 2,0.<br />
+        <b>Kém:</b> Các trường hợp còn lại.<br />
+        <b>Lưu ý:</b> Nếu điểm "trung bình học kì hoặc cả năm" (ĐTBhk/cn) đạt mức của từng loại quy định tại các Khoản 1, 2 điều 13 Thông tư 58 nhưng do kết quả của duy nhất một môn học nào đó thấp hơn mức quy định cho loại đó nên học lực bị xếp thấp xuống thì được điều chỉnh như sau:<br />
+        - Nếu ĐTBhk/cn đạt mức loại Gioir nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Trung bình thì được điều chỉnh xếp loại Khá.<br />
+        - Nếu ĐTBhk/cn đạt mức loại Gioir nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Yếu thì được điều chỉnh xếp loại Trung bình.<br />
+        - Nếu ĐTBhk/cn đạt mức loại Khá nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Yếu thì được điều chỉnh xếp loại Trung bình.<br />
+        - Nếu ĐTBhk/cn đạt mức loại Khá nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Kém thì được điều chỉnh xếp loại Yếu.<br />
+    </div>
+
+    <div id="box">
+        <h1 style="margin-top: 0; margin-bottom: 12px; text-align: center;">Chia sẻ bảng điểm</h1>
+        Bạn muốn bảng điểm của bạn có thể mang sang máy khác hoặc đưa cho người khác xem? Hãy thử tính năng sau nhé! <i>(Tính năng đặc biệt chỉ dành cho dân mày mò ^^)</i>
+        <div style="color: transparent; text-shadow: 0 0 8px black; border: 1px solid #ccc; padding: 4px; text-align: justify; user-select: none;">Hihi, tính năng thì đợi khi nèo ra mắt tui sẽ báo nghen! Mà bạn đọc được chữ này chắc cũng mò ghê phết nhể ^^. Sau đây tui thêm vào chỉ để cho trông cái box nó to hơn ý mà ^^! <br />
+            <i>Giỏi: - Điểm trung bình các môn học từ 8,0 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 8,0 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 8,0 trở lên. - Không có môn học nào điểm trung bình dưới 6,5. - Các môn học đánh giá bằng nhận xét đạt loại Đ. Khá: - Điểm trung bình các môn học từ 6,5 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 6,5 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 6,5 trở lên. - Không có môn học nào điểm trung bình dưới 5,0. - Các môn học đánh giá bằng nhận xét đạt loại Đ. Trung bình: - Điểm trung bình các môn học từ 5,0 trở lên, trong đó điểm trung bình của 1 trong 3 môn Toán, Ngữ văn, Ngoại ngữ từ 5,0 trở lên; riêng đối với học sinh lớp chuyên của trường THPT chuyên phải thêm điều kiện điểm trung bình môn chuyên từ 5,0 trở lên. - Không có môn học nào điểm trung bình dưới 3,5. - Các môn học đánh giá bằng nhận xét đạt loại Đ. Yếu: Điểm trung bình các môn học từ 3,5 trở lên, không có môn học nào điểm trung bình dưới 2,0. Kém: Các trường hợp còn lại. Lưu ý: Nếu điểm "trung bình học kì hoặc cả năm" (ĐTBhk/cn) đạt mức của từng loại quy định tại các Khoản 1, 2 điều 13 Thông tư 58 nhưng do kết quả của duy nhất một môn học nào đó thấp hơn mức quy định cho loại đó nên học lực bị xếp thấp xuống thì được điều chỉnh như sau: - Nếu ĐTBhk/cn đạt mức loại Gioir nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Trung bình thì được điều chỉnh xếp loại Khá. - Nếu ĐTBhk/cn đạt mức loại Gioir nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Yếu thì được điều chỉnh xếp loại Trung bình. - Nếu ĐTBhk/cn đạt mức loại Khá nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Yếu thì được điều chỉnh xếp loại Trung bình. - Nếu ĐTBhk/cn đạt mức loại Khá nhưng do kết quả của duy nhất một môn học nào đó mà phải xuống loại Kém thì được điều chỉnh xếp loại Yếu.</i>
+        </div>
+    </div>
+</body>
+
+</html>

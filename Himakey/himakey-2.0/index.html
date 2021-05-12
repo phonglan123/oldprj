@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Himakey</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="./Logo.png" type="image/x-icon">
+        <link rel="stylesheet" href="./index.css">
+        <script src="./index.js"></script>
+        <script src="./language.js"></script>
+    </head>
+    <body>
+        <div id="top"></div>
+        <button id="videoTitle" onclick="window.open('https://www.youtube.com/watch?v=fCjoMkz0JJM')"><script>document.write(getLanguage("VideoHDSD"));</script></button>
+        <button id="settingButton" onclick="showHide('settingBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Setting'))"><script>document.write(getLanguage("Setting"));</script></button>
+        <div id="settingBox">
+            <select id="chooseLanguage" required onchange="setLanguage(this.value)">
+                <option value="" disabled selected><script>document.write(getLanguage("ChooseLang"));</script></option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="en">English</option>
+            </select><br/>
+            <button id="inputOutputData" onclick="showInputOutput()"><script>document.write(getLanguage("InOutData"));</script></button>
+            <button id="feedback" onclick="window.open('https://github.com/petavietnam/himakey/issues/new')"><script>document.write(getLanguage("Feedback"));</script></button>
+            <button id="changelog" onclick='showHide("sourcodeFrame", this, "<b style=color:red>" + getLanguage("CloseFrame") + "</b>", getLanguage("Changelog"))'><script>document.write(getLanguage("Changelog"));</script> (<script>document.write(getLanguage("Eng"));</script>)</button>
+            <iframe src="./changelog.html" id="sourcodeFrame"></iframe>
+            <button id="sourceCode" onclick="window.open('https://github.com/petavietnam/himakey')"><script>document.write(getLanguage("SourceCode"));</script></button>
+        </div>
+        <br/>
+        <div id="controlButton">
+            <button id="addQuestion" onclick="addQuestion()"><script>document.write(getLanguage("AddQues"));</script></button>
+            <button id="review" onclick="review()"><script>document.write(getLanguage("Review"));</script></button>
+            <button id="search" onclick="showHide('searchBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Search'))"><script>document.write(getLanguage("Search"));</script></button>
+            <div id="searchBox">
+                <form id="inputTextarea" action="javascript:;" onsubmit="searchProcessing()">
+                    <select id="searchType" required onchange="changeSearchType(this.value)">
+                        <option value="" disabled selected><script>document.write(getLanguage("SearchType"));</script></option>
+                        <option value="question"><script>document.write(getLanguage("SearchTitle"));</script></option>
+                        <option value="content"><script>document.write(getLanguage("SearchContent"));</script></option>
+                        <option value="tag"><script>document.write(getLanguage("SearchTag"));</script></option>
+                        <option value="color"><script>document.write(getLanguage("SearchColor"));</script></option>
+                    </select>
+                    <input type="text" id="searchInput" required/>
+                    <select id="searchColor" style="margin-top:-1px; font-size: 16px; display: none">
+                        <option value="" disabled selected><script>document.write(getLanguage("ColorChon"));</script></option>
+                        <option value="#FFFFFF"><script>document.write(getLanguage("White"));</script></option>
+                        <option value="#F03540"><script>document.write(getLanguage("Red"));</script></option>
+                        <option value="#F08935"><script>document.write(getLanguage("Orange"));</script></option>
+                        <option value="#F0EA34"><script>document.write(getLanguage("Yellow"));</script></option>
+                        <option value="#76F035"><script>document.write(getLanguage("Green"));</script></option>
+                        <option value="#35E1F0"><script>document.write(getLanguage("Blue"));</script></option>
+                        <option value="#8835F0"><script>document.write(getLanguage("Indigo"));</script></option>
+                        <option value="#E935F0"><script>document.write(getLanguage("Violet"));</script></option>
+                    </select>
+                    <button id="searchButton" style="margin-bottom: 0"><script>document.write(getLanguage("Search"));</script></button>
+                </form>
+            </div>
+            <button id="action" onclick="showHide('actionBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Action'))"><script>document.write(getLanguage("Action"));</script></button>
+            <div id="actionBox">
+                <button id="multipleDelete" onclick="deleteQuestion()"><script>document.write(getLanguage("MulDel"));</script></button>
+                <button id="multipleColorMark" onclick="changeColor()"><script>document.write(getLanguage("MulColorMark"));</script></button>
+                <button id="multipleTagging" onclick="changeTag()"><script>document.write(getLanguage("MulTag"));</script></button>
+                <button id="selectAll" onclick="selectAll()"><script>document.write(getLanguage("SelectAll"));</script></button>
+                <button id="unselectAll" onclick="writeList()"><script>document.write(getLanguage("UnselectAll"));</script></button>
+            </div>
+        </div>
+        <div id="inputOutputBox">
+            <div id="inputTitle"><b><script>document.write(getLanguage("InData"));</script></b></div>
+            <form id="inputTextarea" action="javascript:;" onsubmit="">
+                <textarea id="inputData" required></textarea>
+                <button id="inputButton" name="submit" onclick="inputDataSave()"><script>document.write(getLanguage("InData"));</script></button>
+            </form><br/>
+            <div id="outputBox">
+                <div id="outputTitle"><b><script>document.write(getLanguage("OutData"));</script></b><br/></div>
+                <div id="outputTips"><script>document.write(getLanguage("CopyDataHere"));</script></div>
+                <textarea id="outputData" required></textarea><br/><br/>
+            </div>
+            <button id="inputOutputClose" onclick='document.getElementById("inputOutputBox").style.display = "none"; document.body.style.overflow = "auto"'><script>document.write(getLanguage("CloseWindow"));</script></button>
+        </div>
+        <div id="editBox">
+            <form id="editForm" action="javascript:;">
+                <input type="text" id="editTag"/>
+                <input type="text" id="editQuestion" required/>
+                <textarea id="editContent" onkeyup="var value = this.value; if(value != '') {document.getElementById('preview').innerHTML = replaceContent(value);} else{document.getElementById('preview').innerHTML = '<i>' + getLanguage('PreviewTips') + '</i>'}" required></textarea>
+                <div id="editTips"><script>document.write(getLanguage("NoteNgoacVuong"));</script></div>
+                <div id="previewButton" onclick='showHide("preview", this, "<b style=color:red>" + getLanguage("CloseFrame") + "</b>", getLanguage("ShowPreview"))'><script>document.write(getLanguage("ShowPreview"));</script></div>
+                <div id="preview"><i><script>document.write(getLanguage("PreviewTips"));</script></i></div>
+                <select id="editDifficult" required>
+                    <option value="" disabled selected><script>document.write(getLanguage("Difficult"));</script></option>
+                    <option value="easy"><script>document.write(getLanguage("Easy"));</script></option>
+                    <option value="medium"><script>document.write(getLanguage("Medium"));</script></option>
+                    <option value="hard"><script>document.write(getLanguage("Hard"));</script></option>
+                </select>
+                <button name="submit" id="editSave"><script>document.write(getLanguage("Save"));</script></button>
+                <input type="reset" id="editCancel" onclick="hideDiv('editBox'); hideDiv('preview'); document.body.style.overflow = 'auto';document.getElementById('previewButton').innerHTML = getLanguage('ShowPreview');"/>
+            </form>
+        </div>
+        <div id="list">
+            <center style="margin: 4px"><b id="stat"><script>document.write(getLanguage("Total"));</script>: 0 - <script>document.write(getLanguage("NeedLearn"));</script>: 0 - <script>document.write(getLanguage("HaveLearned"));</script>: 0</b></center>
+            <div id="questions"></div>
+        </div>
+        <div id="reviewBox">
+            <h2 id="reviewQuestion"></h2>
+            <button id="reviewButton" onclick='showHide("reviewContent", this, "<b>"+getLanguage("ShowKeyword")+"</b>", "<b>"+getLanguage("ShowDapAn")+"</b>")'><b><script>document.write(getLanguage("ShowDapAn"));</script></b></button>
+            <p id="reviewContent"></p>
+            <div id="reviewControl"></div><br/>
+            <button id="reviewStop" onclick='document.getElementById("reviewBox").style.display = "none"; document.body.style.overflow = "auto";'><script>document.write(getLanguage("PauseReview"));</script></button>
+        </div>
+    </body>
+</html>

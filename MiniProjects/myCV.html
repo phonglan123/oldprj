@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MyHtmlCV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.compat.min.css" />
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @keyframes cardInAnimation {
+            0% {
+                position: relative;
+                transform: rotate(180deg);
+                left: -100%;
+                opacity: 0;
+            }
+
+            100% {
+                position: relative;
+                transform: rotate(360deg);
+                left: 0;
+                opacity: 1;
+            }
+
+        }
+
+        @keyframes fade {
+            from {
+                opacity: .4
+            }
+
+            to {
+                opacity: 1
+            }
+
+        }
+
+        @media only screen and (max-width:300px) {
+
+            .prev,
+            .next,
+            .text {
+                font-size: 11px
+            }
+
+        }
+
+        body {
+            overflow: hidden;
+        }
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .mySlides {
+            display: none
+        }
+
+        .slideshow-container {
+            max-width: 1000px;
+            position: relative;
+            margin: auto;
+        }
+
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 0 3px 3px 0;
+            margin-left: -250px;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .text {
+            color: #f2f2f2;
+            font-size: 15px;
+            padding: 8px 12px;
+            position: absolute;
+            bottom: 8px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .active {
+            background-color: #717171;
+        }
+
+        .fade {
+            animation-name: fade;
+            animation-duration: 1.5s;
+        }
+
+        .card {
+            margin: auto;
+            text-align: center;
+            position: relative;
+            top: 0;
+            margin-top: 100px;
+            width: 500px;
+            height: 350px;
+            background: white;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            height: 100%;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        #backCard,
+        #backCard2,
+        #backCard3 {
+            margin-bottom: 20px;
+            height: 150px;
+            overflow: auto;
+            margin-top: -25px;
+        }
+
+        #avatarUrl,
+        #avatarUrlSecond,
+        #avatarUrlThird,
+        #avatarUrlFourth {
+            border-radius: 100%;
+            box-shadow: 0 0 16px 0 #ccc;
+            width: 100px;
+            height: 100px;
+            margin-top: -50px;
+        }
+
+        #career {
+            color: grey;
+            font-size: 18px;
+        }
+
+        #introduction {
+            text-align: justify;
+            padding: 10px;
+            height: 80px;
+            overflow: auto;
+        }
+
+        #nextButton {
+            border: none;
+            outline: 0;
+            padding: 8px;
+            color: white;
+            background-color: #000;
+            text-align: center;
+            cursor: pointer;
+            width: 100px;
+            font-size: 18px;
+        }
+
+        #nextButton:active {
+            opacity: 0.5;
+            box-shadow: 0 0 8px 0 #ccc;
+        }
+
+    </style>
+</head>
+
+<body>
+    <a href="https://github.com/petavietnam/FunWithMe/tree/master/MyHtmlCV" target="_blank"><img style="background: white; width: 100px; position: absolute; top: 0; left: 0; box-shadow: 0 0 8px 0 #ccc; padding: 8px; z-index: 2" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" /></a>
+    <div class="card" id="card1">
+        <div class="flip-card-inner" id="flip-card-inner1">
+            <img id="avatarUrl">
+            <div class="flip-card-front">
+                <h1 id="fullname"></h1>
+                <p id="career"></p>
+                <p id="introduction"></p>
+                <button id="nextButton" onclick='document.getElementById("flip-card-inner1").style.transform = "rotateY(180deg)"; document.getElementById("avatarUrl").src = cv.avatarUrl2; document.getElementById("avatarUrl").style.transform = "rotateY(180deg)";'>Tiếp</button>
+            </div>
+            <div class="flip-card-back">
+                <h1 id="fullnameBackCard"></h1>
+                <div id="backCard">
+                    <ul style="text-align: justify;">
+                        <li><b>Sinh nhật: </b><label id="birthday"></label></li>
+                        <li><b>Địa chỉ: </b><label id="address"></label></li>
+                        <li><b>Số điện thoại: </b><label id="phoneNumber"></label></li>
+                        <li><b>Địa chỉ e-mail: </b><label id="email"></label></li>
+                        <li><b>Sở thích: </b><label id="hobies"></label></li>
+                    </ul>
+                </div>
+                <button id="nextButton" onclick="document.getElementById('card1').style.animation = ''; document.querySelector('#card1').classList.add('animate__animated', 'animate__backOutLeft'); document.querySelector('#card2').classList.add('card', 'animate__animated', 'animate__backInRight'); document.getElementById('card2').style.display='block'; document.getElementById('avatarUrlSecond').src = cv.avatarUrl3">Tiếp</button>
+            </div>
+        </div>
+    </div>
+    <div id="card2" style="display: none; top: -450px">
+        <div class="flip-card-inner" id="flip-card-inner2">
+            <img id="avatarUrlSecond">
+            <div class="flip-card-front" style="overflow-x: hidden;">
+                <h1>Mạng xã hội</h1><br />
+                <div id="backCard2" class="slideshow-container" style="box-shadow: 0 0 8px 0 #ccc"></div>
+                <button id="nextButton" onclick='document.getElementById("flip-card-inner2").style.transform = "rotateY(180deg)"; document.getElementById("avatarUrlSecond").src = cv.avatarUrl4; document.getElementById("avatarUrlSecond").style.transform = "rotateY(180deg)"; document.getElementById("backCard2").style.display = "none";'>Tiếp</button>
+            </div>
+            <div class="flip-card-back">
+                <h1 id="skillsTitle">Kỹ năng</h1>
+                <div id="backCard3" style="text-align: justify; padding: 16px; height: 120px;"></div>
+                <button id="nextButton" onclick="skillsOrLanguage(this)">Tiếp</button>
+            </div>
+        </div>
+    </div>
+    <div id="card3" style="display: none; top: -900px">
+        <div class="flip-card-inner" id="flip-card-inner3">
+            <img id="avatarUrlThird">
+            <div class="flip-card-front" style="overflow-x: hidden;">
+                <b id="timelineIndex" style="display: none">0</b>
+                <h1 id="timelineTitle" style="margin-bottom: -10px;"></h1><br />
+                <i id="timelineTime"></i>
+                <div id="backCard4" class="slideshow-container" style="box-shadow: 0 0 8px 0 #ccc; margin-top: 16px; margin-bottom: 16px; height: 110px; overflow: auto; text-align: justify; padding: 8px"></div>
+                <button id="nextButton" onclick='changeTimeline()'>Tiếp</button>
+            </div>
+        </div>
+    </div>
+    <div id="card4" style="display: none; top: -900px">
+        <div class="flip-card-inner" id="flip-card-inner4">
+            <img id="avatarUrlFourth" src="https://image.flaticon.com/icons/svg/2210/2210715.svg">
+            <div class="flip-card-front" style="overflow-x: hidden;">
+                <h1>Ưu điểm</h1>
+                <div id="backCard5" style="box-shadow: 0 0 8px 0 #ccc; text-align: justify; padding: 16px; height: 120px; overflow: auto; font-size: 16px; margin-bottom: 16px;"></div>
+                <button id="nextButton" onclick='showWeakness()'>Tiếp</button>
+            </div>
+            <div class="flip-card-back">
+                <h1>Khuyết điểm</h1>
+                <div id="backCard6" style="box-shadow: 0 0 8px 0 #ccc; text-align: justify; padding: 16px; height: 120px; overflow: auto; font-size: 16px; margin-bottom: 16px;"></div>
+                <button id="nextButton" style="margin-top: -8px" onclick='document.getElementById("video").style.display = "block"; document.getElementById("video").src = "https://www.youtube.com/embed/" + cv.youtubeVideoUrl.replace("https://www.youtube.com/watch?v=", "").replace("http://www.youtube.com/watch?v=", ""); document.querySelector("#video").classList.add("animate__animated", "animate__lightSpeedInLeft"); document.querySelector("#card4").classList.add("animate__animated", "animate__lightSpeedOutRight");'>Kết thúc</button>
+            </div>
+        </div>
+    </div>
+    <iframe id="video" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 100%; top: 0; position: absolute; left: 0; display: none"></iframe>
+    <script src="./myCVdata.js"></script>
+    <script>
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link'),
+            socialMediaKeys = Object.keys(cv.socialMedia),
+            slideIndex = 1,
+            skillsKeys = Object.keys(cv.skills),
+            skillsList = "",
+            langKeys = Object.keys(cv.language),
+            langList = "",
+            skillsOrLanguageNow = "skills";
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = cv.page.iconUrl;
+        document.getElementsByTagName('head')[0].appendChild(link);
+        document.title = cv.page.title;
+
+        function setContent(element, nameInData) {
+            document.getElementById(element).innerHTML = cv[nameInData];
+        }
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            if (n > slides.length) {
+                slideIndex = 1
+            }
+            if (n < 1) {
+                slideIndex = slides.length
+            }
+            for (i = 0; i < slides.length; i++)
+                slides[i].style.display = "none";
+            slides[slideIndex - 1].style.display = "block";
+        }
+
+        function skillsOrLanguage(button) {
+            if (skillsOrLanguageNow == "skills") {
+                document.getElementById("skillsTitle").innerHTML = "Ngôn ngữ";
+                langKeys.forEach(name => {
+                    langList += "<tr><th>" + name + "</th><td>";
+                    for (var i = 0; i < 5; i++) {
+                        if (i < cv.language[name])
+                            langList += '<span class="fa fa-star" style="font-size: 20px; color: orange;"></span>';
+                        else
+                            langList += '<span class="fa fa-star" style="font-size: 20px;"></span>';
+                    }
+                    switch (cv.language[name]) {
+                        case 1:
+                            langList += " <i>(Mới học)</i>";
+                            break;
+                        case 2:
+                            langList += " <i>(Giao tiếp cơ bản)</i>";
+                            break;
+                        case 3:
+                            langList += " <i>(Giao tiếp nâng cao)</i>";
+                            break;
+                        case 4:
+                            langList += " <i>(Gần như tiếng mẹ đẻ)</i>";
+                            break;
+                        case 5:
+                            langList += " <i>(Tiếng mẹ đẻ)</i>";
+                            break;
+                    }
+                    langList += '</td></tr>';
+                });
+                document.getElementById("backCard3").innerHTML = "<table class='animate__animated animate__zoomInLeft'>" + langList + "</table>";
+                skillsOrLanguageNow = "lang";
+            } else {
+                document.querySelector('#card2').classList.add('card', 'animate__animated', 'animate__zoomOutUp');
+                document.getElementById("card3").style.display = "block";
+                document.querySelector('#card3').classList.add('card', 'animate__animated', 'animate__rotateInDownLeft');
+                changeTimeline();
+            }
+        }
+
+        function changeTimeline() {
+            var indexElement = parseInt(document.getElementById("timelineIndex").innerHTML);
+            if (indexElement < cv.timeline.length) {
+                switch (cv.timeline[indexElement].type) {
+                    case "education":
+                        document.getElementById("avatarUrlThird").src = "https://image.flaticon.com/icons/svg/579/579768.svg";
+                        break;
+                    case "work":
+                        document.getElementById("avatarUrlThird").src = "https://image.flaticon.com/icons/svg/579/579694.svg";
+                        break;
+                    case "project":
+                        document.getElementById("avatarUrlThird").src = "https://image.flaticon.com/icons/svg/579/579815.svg";
+                        break;
+                    case "event":
+                        document.getElementById("avatarUrlThird").src = "https://image.flaticon.com/icons/svg/579/579749.svg";
+                        break;
+                }
+                document.getElementById("timelineTitle").innerHTML = cv.timeline[indexElement].name;
+                document.getElementById("timelineTime").innerHTML = "<b>Từ</b> " + cv.timeline[indexElement].from + " <b>đến</b> " + cv.timeline[indexElement].to;
+                document.getElementById("backCard4").innerHTML = cv.timeline[indexElement].description;
+                document.getElementById("timelineIndex").innerHTML = indexElement + 1;
+            } else {
+                document.getElementById("card3").style.display = "none";
+                document.getElementById("card4").style.display = "block";
+                document.querySelector('#card4').classList.add('card', 'animate__animated', 'animate__fadeInUp');
+                var strengthList = "";
+                cv.strength.forEach(strength => strengthList += "<li>" + strength + "</li>");
+                document.getElementById("backCard5").innerHTML += "<ul>" + strengthList + "</ul>";
+
+            }
+        }
+
+        function showWeakness() {
+            document.getElementById("flip-card-inner4").style.transform = "rotateY(180deg)";
+            document.getElementById("avatarUrlFourth").src = "https://image.flaticon.com/icons/svg/2210/2210827.svg";
+            document.getElementById("avatarUrlFourth").style.transform = "rotateY(180deg)";
+            document.getElementById("backCard5").style.display = "none";
+            var weaknessList = "";
+            cv.weakness.forEach(weakness => weaknessList += "<li>" + weakness + "</li>");
+            document.getElementById("backCard6").innerHTML += "<ul>" + weaknessList + "</ul>";
+        }
+
+        document.getElementById("avatarUrl").src = cv.avatarUrl;
+        setContent("fullname", "fullname");
+        setContent("fullnameBackCard", "fullname");
+        setContent("career", "career");
+        setContent("introduction", "introduction");
+        setContent("birthday", "birthday");
+        setContent("address", "address");
+        setContent("phoneNumber", "phoneNumber");
+        setContent("email", "email");
+        setContent("hobies", "hobies");
+        socialMediaKeys.forEach(name => document.getElementById("backCard2").innerHTML += '<div class="mySlides fade"><a class="socialMediaImage" href="' + cv.socialMedia[name].url + '" target="_blank"><img style="margin: 16px; width: 468px; height: 114px;" src="' + cv.socialMedia[name].icon + '" alt="' + name + '" title="' + name + '"/></a></div>');
+        document.getElementById("backCard2").innerHTML += '<a class="prev" onclick="plusSlides(-1)">&#10094;</a> <a class="next" onclick="plusSlides(1)">&#10095;</a>';
+        skillsKeys.forEach(name => {
+            skillsList += "<tr><th>" + name + "</th><td>";
+            for (var i = 0; i < 5; i++) {
+                if (i < cv.skills[name])
+                    skillsList += '<span class="fa fa-star" style="font-size: 20px; color: orange;"></span>';
+                else
+                    skillsList += '<span class="fa fa-star" style="font-size: 20px;"></span>';
+            }
+            skillsList += '</td></tr>';
+        });
+        document.getElementById("backCard3").innerHTML = "<table>" + skillsList + "</table>";
+
+        showSlides(slideIndex);
+        document.getElementById("card1").style.animation = "cardInAnimation 1s";
+
+    </script>
+</body>
+
+</html>

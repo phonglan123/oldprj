@@ -1,0 +1,23 @@
+<!-- RSA Chat -->
+<h1 style="text-align: center; color:red">RSA Chat</h1>
+<b>ID của bạn</b>: <input id="yourPublic" style="width:calc(100% - 85px); box-shadow: 0 0 8px 0 #ccc; border: none; outline: none; padding: 2px;" type="text"></input><br /><br />
+<div id="encrypt" style="float: left; width: calc(50% - 20px); box-shadow: 0 0 8px 0 #ccc; padding: 6px; margin: 4px">
+    <center><b>Mã hóa thông tin để gửi cho người khác</b> <i>(Với điều kiện là bạn phải có ID của người đó)</i></center><br />
+    <input id="publicKey" style="width:100%" type="text" placeholder="ID của người bạn muốn gửi tin nhắn tới..."></input><br />
+    <input id="mess" style="width:100%; margin-top: -1px" type="text" placeholder="Thông điệp muốn mã hóa..."></input><br />
+    <button onclick='prompt("Đây là thông tin đã mã hóa:", rsa({ text: document.getElementById("mess").value, size: 512, publicKey: "-----BEGIN PUBLIC KEY-----" + document.getElementById("publicKey").value + "-----END PUBLIC KEY-----" }).encrypted);' style="border: 1px solid #ccc; margin-top: 8px; box-shadow: 0 0 8px 0 #ccc; background: white; width: 100%; font-size: 16px">Mã hóa</button>
+</div>
+<div id="decrypt" style="float: left; width: calc(50% - 20px); box-shadow: 0 0 8px 0 #ccc; padding: 6px; margin: 4px">
+    <center><b>Giải mã thông tin từ người khác</b> <i>(Với điều kiện là người đó phải mã hóa từ ID của bạn)</i></center><br />
+    <input id="encrypted" style="width:100%" type="text" placeholder="Thông tin đã mã hóa..."></input><br />
+    <button style="border: 1px solid #ccc; margin-top: 8px; box-shadow: 0 0 8px 0 #ccc; background: white; width: 100%; font-size: 16px" onclick='prompt("Thông điệp ban đầu: ", rsa({ encrypted: document.getElementById("encrypted").value, privateKey: localStorage.getItem("privateKey"), size: 512 }));'>Giải mã</button>
+</div>
+<script src="./jsencrypt.min.js"></script>
+<script src="./RSAChat.js"></script>
+<!-- Login by bCrypt -->
+<br /><br /><br /><br /><br /><br />
+<h1 style="text-align: center; color:red">Login by bCrypt</h1>
+<iframe src="bCrypt.html" width="100%" height="400px" style="border: none"></iframe>
+<!-- AESEncryption -->
+<h1 style="text-align: center; color:red">AESEncryption</h1>
+<iframe src="AESEncryption.html" width="100%" height="400px" style="border: none"></iframe>

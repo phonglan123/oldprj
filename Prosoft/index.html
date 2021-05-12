@@ -1,0 +1,1037 @@
+﻿<html><head>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<title>Prosoft - 'Anh' trợ lí ảo của bạn</title>
+	<meta charset="UTF-8"/>
+	<meta name="robots" content="noindex,follow"/>
+	<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+</head><body>
+
+<div id="hideDiv"></div><div id="webFrameHide"></div>
+
+<div id="demo" style="height: calc(100% - 60px); position: absolute; width: calc(100% - 16px); overflow: auto;"></div>
+
+<div id="boxVoice" style="position: absolute; bottom: 0; width: calc(100% - 2px); border:1px solid #ccc; left: -1px;box-shadow: 4px 0 16px 16px #ccc; border-radius: 16px 16px 0 0;"><button type="submit" id="start-record-btn" style="outline:none;width: 44px;height: 44px;color: blue;cursor: pointer;background: white; border: none; border: 1px solid #ccc; border-width: 0 2px 0 0; border-radius: 16px 0 0 0;"><i id="buttVoice" class="fa fa-microphone-slash fa-2x" style="color: red" title="Kích hoạt giọng nói"></i></button><input type="text" id="note-textarea" autofocus="true" name="firstname" placeholder="Nhập tin nhắn..." onkeyup="if(event.keyCode === 13){qaa()}" style="width: calc(100% - 42px);outline:none;box-sizing: border-box;padding: 3px;font-size: 30px; position: absolute; margin-top: 0px; border-radius: 0 16px 0 0; border: none; height: 44px"/></div>
+
+<div id="webFrame" style="display: none"><div style="border-radius: 4px;font-size: 20px;padding: 4px;background: #ccc;top: 16px;left: 16px;position: absolute; z-index: 1" onclick="document.getElementById('webFrame').style.display='none';"><font color="red" style="cursor: pointer;"><i class="fa fa-times" title="Đóng"></i> Đóng</font></div><iframe src="" style="border: none; top: 0;left:0;position: absolute;width: 100%; height: 100%; background: white" id="webview"></iframe></div>
+
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=s3FOVpNo"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
+<script type="text/javascript" src="https://unpkg.com/mathjs@6.6.1/dist/math.min.js"></script>
+<script>
+/* - - - - BẮT ĐẦU - - - - */
+//Khởi động
+if(top.location != self.location){top.location = self.location;} //Chống chèn iframe
+var user_profile = [],
+    helpTitle = [],
+    helpContent = [],
+    darkModeStatus = "tắt",
+    gameInKboard = "NONE",
+    userName = localStorage.getItem("username"),
+	tinhnangTacvu = [],
+	tinhnangLenh = [],
+	tinhnangThamso = [],
+	tinhnangGhichu = [],
+	bookmarkdelMode = 0,
+	funboxMode = 0;
+
+//Câu lệnh
+user_profile.push({
+    description: ["tạo ghi chú có nội dung là", "tạo ghi chú là", "nội dung ghi chú mới là", "nội dung ghi chú là", "ghi chú mới là"],
+    link: ["Okie, tôi đã giúp bạn tạo ghi chú rồi đó. Nhắn 'ghi chú' để xem danh sách ghi chú nhé!"],
+    dothis: ["newnote"]
+});
+user_profile.push({
+    description: ["funbox"],
+    link: ["Đang mở Fun Box..."],
+    dothis: ["openHelp"]
+});
+user_profile.push({
+    description: ["mở youtube", "mở yt"],
+    link: ["Đang mở YouTube....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openYT"]
+});
+user_profile.push({
+    description: ["mở facebook", "mở fb"],
+    link: ["Đang mở Facebook....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openFB"]
+});
+user_profile.push({
+    description: ["mở gmail"],
+    link: ["Đang mở Gmail....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openGmail"]
+});
+user_profile.push({
+    description: ["mở gg", "mở google"],
+    link: ["Đang mở Google....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openGG"]
+});
+user_profile.push({
+    description: ["mở vne", "mở vnexpress"],
+    link: ["Đang mở VnExpress....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openVNE"]
+});
+user_profile.push({
+    description: ["covid-19", "ncov", "2019-ncov", "covid", "sars-cov-2", "corona"],
+    link: ["Tôi sẽ cho bạn biết thông tin mới nhất về dịch bệnh Corona", "Corona ư? Đây là thông tin về nó!"],
+    dothis: ["openCovid"]
+});
+user_profile.push({
+    description: ["tin tức"],
+    link: ["Đang mở Báo mới....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["openBaoMoi"]
+});
+user_profile.push({
+    description: ["tạo ra bạn", "thành lập ra bạn", "đẻ ra bạn"],
+    link: ["Người tạo ra tui á? Là đội ngũ Prosoft đó.", "Tui được lập trình bởi đội ngũ Prosoft đó!"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["what's your name", "whats your name", "what your name", "tên j", "tên là j", "tên gì", "tên là gì"],
+    link: ["My name is Prosoft", "Tui tên là Prosoft", "Tui là trợ lí ảo của bạn - Prosoft. Hãy ra lệnh cho tui nhé", "Tui tên Prosoft! Thế còn bạn?"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["bạn nhiu tuổi", "bạn bao nhiu tuổi", "bạn nhiu tủi", "bạn bao nhiu tủi", "bạn mấy tuổi", "cậu nhiu tuổi", "cậu bao nhiu tuổi", "cậu nhiu tủi", "cậu bao nhiu tủi", "cậu mấy tuổi", "mày nhiu tuổi", "mày bao nhiu tuổi", "mày nhiu tủi", "mày bao nhiu tủi", "mày mấy tuổi", "bạn bao nhiêu tuổi", "bạn nhiêu tuổi", "cậu bao nhiêu tuổi", "cậu nhiêu tuổi", "mày bao nhiêu tuổi", "mày nhiêu tuổi"],
+    link: ["Tui được lập trình vào năm 2020 đó. Lấy năm nay trừ đi 2020 là ra tuổi tui thui", "Tui thì được tạo ra vào năm 2020 nhưng tôi là trợ lí của bạn nên tuổi tôi tính từ lúc bạn dùng tôi. Hehe"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["trên yt", "trên youtube"],
+    link: ["Đang mở YouTube....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["findYT"]
+});
+user_profile.push({
+    description: ["trên fb", "trên facebook"],
+    link: ["Đang mở Facebook....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["findFB"]
+});
+user_profile.push({
+    description: ["trên gg", "trên google", "trên mạng", "trên internet"],
+    link: ["Đang mở Google....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["findGG"]
+});
+user_profile.push({
+    description: ["là gì", "trên wikipedia", "trên wiki", "là ai"],
+    link: ["Đây là thông tin tôi tìm được trên Wikipedia...", "Tôi đang tìm nó trên Wikipedia..."],
+    dothis: ["wikiThis"]
+});
+user_profile.push({
+    description: ["cách để", "như thế nào", "trên wikiphow"],
+    link: ["Đây là thông tin tôi tìm được trên WikiHow...", "Tôi đang tìm nó trên WikiHow..."],
+    dothis: ["howThis"]
+});
+user_profile.push({
+    description: ["bằng bao nhiêu", "= ?", "=?", "= bao nhiêu", "bằng bao nhiu", "bằng bn", "= bn", "= bao nhiu", "bằng nhiu"],
+    link: ["Chờ tí nhé...", "Tôi đang tính toán, chờ một chút xíu nhé..."],
+    dothis: ["cdTienDV"]
+});
+user_profile.push({
+    description: ["trên zing", "trên zing mp3", "mở nhạc", "tìm nhạc", "bài hát", "mở bài", "bật"],
+    link: ["Đang mở Zing MP3....", "Dễ thôi, tôi sẽ mở ngay", "Chờ tí nhé..."],
+    dothis: ["findZing"]
+});
+user_profile.push({
+    description: ["bạn có thể làm", "tính năng"],
+    link: ["Tui có thể làm gì ư? Chờ tí nhé!", "Ok lun, chờ tí nhé...."],
+    dothis: ["tinhnang"]
+});
+user_profile.push({
+    description: ["tải video yt", "tải video youtube", "tải video ytb"],
+    link: ["Bạn thích video này ư? Tôi sẽ tải cho bạn...", "Tôi đang lưu nó về máy bạn đây..."],
+    dothis: ["dldYT"]
+});
+user_profile.push({
+    description: ["bạn thông minh"],
+    link: ["Cảm ơn bạn nhé", "Tui hông thông minh bằng bạn đâu!", "Thank you bạn nhé!"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["danh ngôn", "câu nói hay"],
+    link: ["Mỗi ngày một câu danh ngôn. Đây là câu danh ngôn ngày hôm nay", "Một câu danh ngôn mỗi ngày. Tui sẽ cho bạn xem câu danh ngôn hôm nay"],
+    dothis: ["danhNgon"]
+});
+user_profile.push({
+    description: ["darkmode", "dark mode", "chế độ tối"],
+    link: ["Tôi đang cài đặt chế độ tối cho bạn đây.", "Xem nào. Ok lun. Chờ một tí xíu nhé!", "Chờ xíu xíu nhé...", "Tui đang cài đặt chế độ tối cho bạn đây..."],
+    dothis: ["darkMode"]
+});
+user_profile.push({
+    description: ["play game", "chơi game", "bật game", "play trò chơi", "chơi trò chơi", "bật trò chơi"],
+    link: ["Bấm vào các nút dưới đây để chọn game nhé", "Xem nào. Bấm vào các nút dưới đây để chọn game nhé", "Okie lun. Các bạn hãy bấm vào các nút dưới đây để chọn game nhé"],
+    dothis: ["game"]
+});
+user_profile.push({
+    description: ["ghi chú"],
+    link: ["Tôi đang mở danh sách ghi chú của bạn đây", "Ghi chú ư? Tôi đang mở nó đây!"],
+    dothis: ["note"]
+});
+user_profile.push({
+    description: ["repeat", "lặp lại", "nhắc lại"],
+    link: ["Chờ tí nhé....", "Tôi sẽ làm ngay"],
+    dothis: ["repeat"]
+});
+user_profile.push({
+    description: ["tôi tên", "tớ tên", "mình tên", "tao tên", "tui tên"],
+    link: ["Tôi đã ghi nhớ tên của bạn!", "Hê lu bạn, tui đã ghi nhớ tên bạn!"],
+    dothis: ["rememName"]
+});
+user_profile.push({
+    description: ["todo", "to-do", "công việc", "to do"],
+    link: ["Tôi đang mở danh sách công việc của bạn đây!", "To-do list ư? Tôi đang mở nó đây!", "Tôi sẽ cho bạn biết công việc bạn phải làm!"],
+    dothis: ["todolist"]
+});
+user_profile.push({
+    description: ["bookmark", "dấu trang", "book mark", "danh bạ web"],
+    link: ["Đang mở danh sách dấu trang", "Tôi đang mở danh sách dấu trang của bạn đây!"],
+    dothis: ["bookmark"]
+});
+user_profile.push({
+    description: ["liên hệ", "contact", "liên lạc"],
+    link: ["Tôi đang mở danh sách liên hệ của bạn đêy!", "Chờ một tí xíu xịu xìu xiu nhé!"],
+    dothis: ["contactList"]
+});
+user_profile.push({
+    description: ["lịch"],
+    link: ["Chờ một tí nhé!", "Lịch ư? Nó đêy nè!"],
+    dothis: ["lichHangNam"]
+});
+user_profile.push({
+    description: ["hôm nay", "hôm ni", "thứ mấy", "mấy giờ", "tháng mấy", "ngày mấy", "năm nào", "năm mấy", "bây giờ", "tháng này", "năm nay"],
+    link: ["Chờ tí nhé"],
+    dothis: ["todayEvent"]
+});
+if (userName == null) {
+    user_profile.push({
+        description: ["chào", "hello"],
+        link: ["Hello bạn", "Chào bạn", "Hê lu bạn iu", "Bông-dua! Hehe"],
+        dothis: ["nothing"]
+    });
+} else {
+    user_profile.push({
+        description: ["chào", "hello"],
+        link: ["Chào mừng quay trở lại, " + userName, "Chào " + userName + " nhé!", "Hê lu bạn " + userName + " thân iu", "Bông-dua! Hehe"],
+        dothis: ["nothing"]
+    });
+}
+user_profile.push({
+    description: ["khỏe không", "khỏe ko", "khỏe khôg", "khỏe k", "how are you", "how r u"],
+    link: ["Tui vẫn ổn bạn à", "Không khỏe thì sao nói chuyện được với bạn chứ. Hehe", "Ai am phai thanh kiu"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["alo"],
+    link: ["Alo! Nghe rõ trả lời", "Đại bàng gọi sẻ chim... à chim sẻ", "Bạn iu gọi gì tui đó?", "Hú hú", "Số máy bạn vừa gọi hiện đang vào 'phây', vui lòng gọi lại sau!"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["cảm ơn", "thanks", "thank you", "thanh kiu", "cám ơn"],
+    link: ["Không có chi!", "Hehe, giúp bạn là việc của tôi mà", "Việc nhỏ ý mà"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["xin lỗi", "sorry", "sory"],
+    link: ["Không có chi!", "Tui hông giận bạn đâu mà"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["buồn quá", "chán quá"],
+    link: ["Nếu bạn buồn thì hãy bảo tôi mở một bài hát trên YouTube đi. Ví dụ như: bài hát vui trên YouTube.", "Hãy vui lên nhé!"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["vui quá"],
+    link: ["Bạn vui thì tui cũng vui lun", "Hãy nhân đôi niềm vui bằng cách ra lệnh cho tôi nhé. Ví dụ như: bài hát vui trên YouTube."],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["oke", "okie", "ukm", "ô kê"],
+    link: ["Ô-kê con bê.", "Hehe", "(^-^) Ô văn kê!"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["chơi không", "chơi k", "chơi ko"],
+    link: ["Đi chơi á? Đi ngay", "Tui luôn ở bên cạnh bạn! Bạn dẫn tui đi đâu thì tui đi đó thui"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["omg", "oh my god", "ôi trời", "lạy chúa tôi"],
+    link: ["Âu-em-gi là Oh my god hay Lạy chúa tôi", "Gì mà ghê thế?"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["bye", "tạm biệt"],
+    link: ["Gút-bai bạn nhé", "Bye bye. Hẹn gặp lại bạn", "Nhớ trở lại đấy nhé"],
+    dothis: ["nothing"]
+});
+user_profile.push({
+    description: ["đúng", "chuẩn"],
+    link: ["Chuẩn hông cần chỉnh mà đã chỉnh là hông còn chuẩn!", "Chuẩn lun ý mà!"],
+    dothis: ["nothing"]
+});
+//Thực thi
+function dothis(cmd) {
+    if (cmd == "openHelp") {
+		if(funboxMode == 1){
+			setTimeout(function() {
+				document.getElementById('helpBox').style.display = "block";
+			}, 2000);
+		}
+    } else if (cmd == "nothing") {
+
+    } else if (cmd == "darkMode") {
+        setTimeout(function() {
+            if (darkModeStatus == "tắt") {
+                document.body.style = "background: #ccc;opacity: 0.4; transition: all 2s;";
+                darkModeStatus = "bật";
+            } else {
+                document.body.style = "background: none;opacity: 1; transition: all 2s;";
+                darkModeStatus = "tắt";
+            }
+        }, 4000);
+        setTimeout(function() {
+            Messwrite("demo", 0, "Tôi đã giúp bạn " + darkModeStatus + " chế độ tối rồi đó. Hãy bật nó khi trời tối để không hại mắt nhé!");
+        }, 6000);
+    } else if (cmd == "openVNE") {
+        setTimeout(function() {
+            document.getElementById('webFrame').style.display = 'block';
+            document.getElementById('webview').src = "https://vnexpress.net/";
+        }, 2000);
+    } else if (cmd == "openYT") {
+        setTimeout(function() {
+            window.open("https://youtube.com");
+        }, 2000);
+    } else if (cmd == "openFB") {
+        setTimeout(function() {
+            window.open("https://facebook.com");
+        }, 2000);
+    } else if (cmd == "openGG") {
+        setTimeout(function() {
+            window.open("https://google.com.vn");
+        }, 2000);
+    } else if (cmd == "openGmail") {
+        setTimeout(function() {
+            window.open("https://gmail.com");
+        }, 2000);
+    } else if (cmd == "openCovid") {
+        setTimeout(function() {
+            document.getElementById('webFrame').style.display = 'block';
+            document.getElementById('webview').src = "https://corona.kompa.ai/";
+        }, 2000);
+    } else if (cmd == "openBaoMoi") {
+        setTimeout(function() {
+            document.getElementById('webFrame').style.display = 'block';
+            document.getElementById('webview').src = "https://baomoi.com/";
+        }, 2000);
+    } else if (cmd == "dldYT") {
+        var name2 = [/tải video youtube sau /gi, /tải video ytb sau /gi, /tải video yt sau /gi, /tải video youtube /gi, /tải video yt /gi, /tải video ytb /gi];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmdN = thelastcmdN.replace(name2[i], "");
+        }
+        if (thelastcmdN.indexOf("youtube.com") >= 0) {
+            thelastcmdN = thelastcmdN.replace("youtube.com", "youtubepp.com");
+            setTimeout(function() {
+                document.getElementById('webFrame').style.display = 'block';
+                document.getElementById('webview').src = thelastcmdN;
+            }, 2000);
+        } else {
+            setTimeout(function() {
+                document.getElementById('webFrame').style.display = 'block';
+                document.getElementById('webview').src = "https://www.y2mate.com/vi/youtube/" + thelastcmdN;
+            }, 2000);
+        }
+    } else if (cmd == "findYT") {
+        var name2 = ["mở", "tìm", "tìm kiếm", "trên youtube", "trên yt"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            window.open("https://www.youtube.com/results?search_query=" + thelastcmd);
+        }, 2000);
+    } else if (cmd == "findFB") {
+        var name2 = ["mở", "tìm", "tìm kiếm", "trên facebook", "trên fb"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            window.open("https://www.facebook.com/search/top/?q=" + thelastcmd);
+        }, 2000);
+    } else if (cmd == "findGG") {
+        var name2 = ["mở", "tìm", "tìm kiếm", "trên google", "trên gg", "trên mạng", "trên internet"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            window.open("https://www.google.com/search?q=" + thelastcmd);
+        }, 2000);
+    } else if (cmd == "wikiThis") {
+        var name2 = ["là cái gì", "là gì", "mở", "tìm", "tìm kiếm", "trên wikipedia", "trên wiki", "là ai"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            document.getElementById('webFrame').style.display = 'block';
+            document.getElementById('webview').src = "https://vi.m.wikipedia.org/wiki/" + thelastcmd;
+        }, 2000);
+    } else if (cmd == "howThis") {
+        var name2 = ["như thế nào", "trên wikihow"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            window.open("https://www.wikihow.vn/wikiHowTo?search=" + thelastcmd);
+        }, 2000);
+    } else if (cmd == "cdTienDV") {
+        var name2 = ["bằng bao nhiêu", "= ?", "=?", "= bao nhiêu", "bằng bao nhiu", "bằng bn", "= bn", "= bao nhiu", "bằng nhiu"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        var arr = [],
+			cmd1 = thelastcmd;
+        cmd1 = cmd1.replace("đô la mỹ", "USD");
+        cmd1 = cmd1.replace("đô la", "USD");
+        cmd1 = cmd1.replace("đôla mỹ", "USD");
+        cmd1 = cmd1.replace("đôla", "USD");
+        cmd1 = cmd1.replace("đô-la mỹ", "USD");
+        cmd1 = cmd1.replace("đô-la", "USD");
+        cmd1 = cmd1.replace("đô", "USD");
+        cmd1 = cmd1.replace("việt nam đồng", "VND");
+        cmd1 = cmd1.replace("vn đồng", "VND");
+        cmd1 = cmd1.replace("tiền vnd", "VND");
+        cmd1 = cmd1.replace("tiền vnđ", "VND");
+        cmd1 = cmd1.replace("vnđ", "VND");
+        cmd1 = cmd1.replace("đồng", "VND");
+        cmd1 = cmd1.replace("tiền việt", "VND");
+        cmd1 = cmd1.replace("tiền việt nam", "VND");
+        cmd1 = cmd1.replace("bitcoin", "BTC");
+        cmd1 = cmd1.replace("tiền vn", "VND");
+        arr = cmd1.split(' ');
+        for (var b = 0; b < arr.length; b++) {
+			var index = arr.indexOf("");
+            if (index > -1) {
+                arr.splice(index, 1);
+            }
+        }
+        var tenTien = arr[1].toUpperCase() + "_" + arr[2].toUpperCase();
+        var tenTienJSON = showGetResult("https://openexchangerates.org/api/currencies.json", "JSON");
+        var tenTienX = Object.keys(tenTienJSON);
+        var needType = "unit";
+        for (var c = 0; c < tenTienX.length; c++) {
+            if (arr[1] == tenTienX[c] || arr[2] == tenTienX[c]) {
+                needType = "money";
+            }
+        }
+        if (needType == "money") {
+            if (arr[1].toUpperCase()) {
+                $.get("https://free.currconv.com/api/v7/convert?compact=ultra&apiKey=25ec0e43393a52077a27&q=" + tenTien, function(data) {
+                    var tigia = data[tenTien];
+                    var soTien = arr[0] * tigia;
+                    setTimeout(function() {
+                        Messwrite("demo", 0, "Theo tôi tính toán thì, " + new Intl.NumberFormat().format(arr[0]) + " " + arr[1].toUpperCase() + " bằng " + new Intl.NumberFormat().format(soTien) + " " + arr[2].toUpperCase());
+                    }, 3000);
+                });
+            }
+        } else {
+            var kq = math.unit(arr[0], arr[1]).toNumber(arr[2]);
+            setTimeout(function() {
+                Messwrite("demo", 0, "Theo tôi tính toán thì, " + new Intl.NumberFormat().format(arr[0]) + " " + arr[1] + " bằng " + new Intl.NumberFormat().format(kq) + " " + arr[2]);
+            }, 3000);
+        }
+    } else if (cmd == "findZing") {
+        var name2 = ["mở nhạc", "mở bài hát", "tìm nhạc", "tìm kiếm", "trên zing mp3", "trên zing", "mở", "tìm", "bài hát", "nhạc"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            document.getElementById('webFrame').style.display = 'block';
+            document.getElementById('webview').src = "https://zingmp3.vn/tim-kiem/index.html?q=" + thelastcmd;
+        }, 2000);
+    } else if (cmd == "danhNgon") {
+        var today = new Date();
+        var first = new Date(today.getFullYear(), 0, 1);
+        var day = Math.round(((today - first) / 86400000), 0);
+        var numquotes = 30;
+        quotes = new Array(numquotes + 1);
+        authors = new Array(numquotes + 1);
+        quotes[1] = "Ông chủ làm vẻ vang cho ngôi nhà chứ không phải ngôi nhà làm vẻ vang cho ông chủ.", quotes[2] = "Mỗi ngày ta biết thêm những điều ta chưa biết. Mỗi tháng không quên những điều ta đã biết. Như vậy là người hiếu học.", quotes[3] = "Phẩm chất chân chính của một người ở trong cách họ sống chứ không ở trong cái họ có.", quotes[4] = "Dù nó thật tồi tàn đi nữa, chẳng nơi nào sánh được với mái ấm gia đình.", quotes[5] = "Biết lo toan chu đáo công việc nhỏ với tầm mắt xa rộng. Đó là bí quyết để mưu đồ đại sự.", quotes[6] = "Thời gian không đo lường bằng năm tháng mà bằng những gì chúng ta làm được.", quotes[7] = "Đừng lo cho mình không có chức vị, chỉ lo không đủ tài để nhận chức vị mà thôi.", quotes[8] = "Tình bạn đòi hỏi sự thông cảm sâu xa giữa những người bạn. Nếu không, tình bạn không thể nảy sinh hoặc tồn tại.", quotes[9] = "Không phải tất cả những người cười với ta đều là bạn cũng không phải tất cả những người làm ta bực mình đều là kẻ thù của ta.", quotes[10] = "Hạnh phúc nằm ngay trong nhà mình, không nên đi tìm trong vườn người khác.", quotes[11] = "Bạn sẽ biết thế nào là niềm vui sướng khi bạn hiểu được giá trị của mồ hôi và nước mắt.", quotes[12] = "Đừng để ai phiền trách bạn. Trong mọi việc nếu bạn không thành công thì hãy cho là lỗi tại bạn. Đừng đổ lỗi cho ai.", quotes[13] = "Kẻ lấy thân thế chơi với nhau, thân thế đổ là bạn hết. Kẻ lấy của cải chơi với nhau, của cải hết là mất bạn.", quotes[14] = "Bạn hãy cười và thế gian sẽ cười với bạn. Bạn hãy khóc và bạn khóc cô đơn.", quotes[15] = "Khi bạn thấy khó chịu về lỗi của người khác, bạn hãy xét mình lại và coi xem bạn có làm như họ vậy không.", quotes[16] = "Không có cái gì dễ, nhưng cái gì rồi cũng sẽ trở nên dễ nếu chúng ta biết trì chí kiên tâm.", quotes[17] = "Bạn hãy hiền dịu bao dung với hết tất cả mọi người trừ chính mình.", quotes[18] = "Mỗi người có trong đời mình những trang sách mà mình không biết và được viết bởi công trạng của người khác.", quotes[19] = "Bạn đừng làm một điểm trên vòng tròn mà phải làm một trung tâm điểm.", quotes[20] = "Làm cho người khác tốt hơn đó là cách duy nhất làm cho người ta hạnh phúc hơn.", quotes[21] = "Một ông thầy mà không dạy cho học trò được việc ham muốn học tập thì chỉ là đập búa trên sắt nguội mà thôi.", quotes[22] = "Học tập là hạt giống của kiến thức, kiến thức là hạt giống của hạnh phúc.", quotes[23] = "Ngủ dậy muộn thì phí mất cả ngày, ở tuổi thanh niên mà không học tập thì phí mất cả cuộc đời.", quotes[24] = "Phải tôn kính thầy dạy mình, bởi lẽ nếu cha mẹ cho ta sự sống thì chính các thầy giáo cho ta phương cách sống đàng hoàng tử tế.", quotes[25] = "Ðọc sách cũng giống như xem tranh; ta phải không nghi ngờ, không do dự, mà mạnh dạn chiêm ngưỡng cái đẹp.", quotes[26] = "Thích đọc sách tức là biết đánh đổi những giờ phút buồn tẻ không thể tránh được trong cuộc đời lấy những giờ phút lý thú.", quotes[27] = "Nếu quy luật đầu tiên của tình bạn là phải vun đắp nó thì quy luật thứ hai là phải độ lượng khi quy luật thứ nhất bị sao nhãng.", quotes[28] = "Dám và thử thách là những trận chiến. Nếu bạn thua một lần, hai lần hoặc nhiều lần nữa, bạn hãy giao chiến lại rồi sẽ được lúc bạn toàn thắng.", quotes[29] = "Nếu đẹp, bạn hãy đáng với nhan sắc của mình, nếu xấu bạn hãy làm cho người ta quên cái xấu của bạn bằng kiến thức của bạn.", quotes[30] = "Muốn được hạnh phúc đến mức độ nào, ta phải có đau khổ đến mức độ đó.";
+        authors[1] = "Xi-xê-rông";
+        authors[2] = "Sách luận ngữ";
+        authors[3] = "Blackie";
+        authors[4] = "J. Payner";
+        authors[5] = "Lã Đông Lai";
+        authors[6] = "H. Cason";
+        authors[7] = "Khổng Tử";
+        authors[8] = "Ghersen";
+        authors[9] = "Phoebe Vary";
+        authors[10] = "Danh ngôn Anh";
+        authors[11] = "Gia-bơ-ri-ơ Pa-lan";
+        authors[12] = "Earvin";
+        authors[13] = "Vân Trung Tư";
+        authors[14] = "E. W. Wilcox";
+        authors[15] = "Marc-Aurele";
+        authors[16] = "Andre Moroi";
+        authors[17] = "Joubert";
+        authors[18] = "G. Guyau";
+        authors[19] = "Luc Miriam";
+        authors[20] = "Ampere";
+        authors[21] = "Horaceman";
+        authors[22] = "Ngạn ngữ Gruzia";
+        authors[23] = "Ngạn ngữ Trung Quốc";
+        authors[24] = "Philoxêne De Cythêrê";
+        authors[25] = "Vincent Van Gogh";
+        authors[26] = "Mông-tex-kiơ";
+        authors[27] = "Vontaire";
+        authors[28] = "Epictete";
+        authors[29] = "Nicole";
+        authors[30] = "Edgar Poe";
+        var ran = (day % numquotes) + 1;
+        setTimeout(function() {
+            Messwrite("demo", 0, '"' + quotes[ran] + '". Danh ngôn trên là của ' + authors[ran] + " đó! Hẹn gặp lại bạn vào ngày mai nhé.");
+        }, 4444);
+    } else if (cmd == "game") {
+        chooseGame();
+    } else if (cmd == "note") {
+        setTimeout(function() {
+            document.getElementById("webFrame1").style.display = "block";
+        }, 2000);
+        notemanSave();
+    } else if (cmd == "todolist") {
+        setTimeout(function() {
+			document.getElementById("webFrame2").style.display = "block";
+        }, 2000);
+        noteman1Save();
+    } else if (cmd == "tinhnang") {
+        setTimeout(function() {
+			document.getElementById("webFrame3").style.display = "block";
+        }, 2000);
+    } else if (cmd == "bookmark") {
+        setTimeout(function() {
+			document.getElementById("webFrame4").style.display = "block";
+        }, 2000);
+    } else if (cmd == "contactList") {
+        setTimeout(function() {
+			document.getElementById("webFrame6").style.display = "block";
+        }, 2000);
+    } else if (cmd == "lichHangNam") {
+        setTimeout(function() {
+			document.getElementById("webFrame7").style.display = "block";
+        }, 2000);
+    } else if (cmd == "newnote") {
+        var name2 = ["tạo ghi chú có nội dung là", "tạo ghi chú là", "nội dung ghi chú mới là", "nội dung ghi chú là", "ghi chú mới là"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        notemanNew(thelastcmd);
+        notemanSave();
+    } else if (cmd == "repeat") {
+        var name2 = ["repeat", "lặp lại câu sau", "lặp lại", "nhắc lại câu sau", "nhắc lại"];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmd = thelastcmd.replace(name2[i], "");
+        }
+        setTimeout(function() {
+            Messwrite("demo", 0, thelastcmd);
+        }, 3000);
+    } else if (cmd == "rememName") {
+        var name2 = [/tôi tên/gi, /tớ tên/gi, /là/gi, /tao tên/gi, /mình tên/gi, /tui tên/gi];
+        for (var i = 0; i < name2.length; i++) {
+            thelastcmdN = thelastcmdN.replace(name2[i], "");
+        }
+        localStorage.setItem("username", thelastcmdN);
+		userName = localStorage.getItem("username");
+    } else if (cmd == "todayEvent") {
+		if(thelastcmd.indexOf("sự kiện") > -1){
+			setTimeout(function() {
+				homNiNgayGi("cmd");
+			}, 2000);
+		} else {
+			var d = new Date();
+			var thuTrongTuan = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ 5", "Thứ 6", "Thứ 7"];
+			setTimeout(function() {
+				Messwrite("demo", 0, "Bây giờ là " + d.getHours() + " giờ " + d.getMinutes() + " phút. " + thuTrongTuan[d.getDay()] + " ngày " + d.getDate() + " tháng " + parseInt(d.getMonth()+1) + " năm " + d.getFullYear());
+			}, 2000);
+		}
+    }
+}
+//Tính năng
+tinhnangTacvu.push('<code id="hot">HOT</code> Cập nhật tình hình virus Corona');
+tinhnangLenh.push('corona');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Mở ứng dụng, website');
+tinhnangLenh.push('mở <code id="blue">tên</code>');
+tinhnangThamso.push('<code id="blue">tên</code>: Tên ứng dụng hay website muốn mở');
+tinhnangGhichu.push('Các ứng dụng/website hỗ trợ: YouTube, Facebook, Google, Gmail, VnExpress');
+
+tinhnangTacvu.push('Tìm kiếm trên ứng dụng');
+tinhnangLenh.push('tìm <code id="blue">từ khóa</code> trên <code id="orange">tên</code>');
+tinhnangThamso.push('<code id="blue">từ khóa</code>: Từ khóa tìm kiếm<br><code id="orange">tên</code>: Tên ứng dụng hay website muốn tìm');
+tinhnangGhichu.push('Các ứng dụng/website hỗ trợ: YouTube, Facebook, Google');
+
+tinhnangTacvu.push('Xem tin tức');
+tinhnangLenh.push('tin tức');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Tìm thông tin trên Wikipedia');
+tinhnangLenh.push('<code id="blue">từ khóa</code> là gì?, tìm <code id="blue">từ khóa</code> trên wiki');
+tinhnangThamso.push('<code id="blue">từ khóa</code>: Từ khóa tìm kiếm<br>');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Tìm thông tin trên WikiHow');
+tinhnangLenh.push('<code id="blue">từ khóa</code> như thế nào?, tìm <code id="blue">từ khóa</code> trên wikihow');
+tinhnangThamso.push('<code id="blue">từ khóa</code>: Từ khóa tìm kiếm<br>');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Chuyển đổi tiền tệ');
+tinhnangLenh.push('<code id="blue">số tiền</code> <code id="orange">kí hiệu tiền</code> bằng bao nhiêu <code id="green">kí hiệu tiền</code>');
+tinhnangThamso.push('<code id="blue">số tiền</code>: Số tiền ban đầu<br> <code id="orange">kí hiệu tiền</code>: Kí hiệu tiền ban đầu (VD: BTC)<br><code id="green">kí hiệu tiền</code>: Kí hiệu tiền muốn biết (VD: VND, USD)');
+tinhnangGhichu.push('Ví dụ: <code id="blue">1</code> <code id="orange">BTC</code> bằng bao nhiêu <code id="green">USD</code>');
+
+tinhnangTacvu.push('Tìm nhạc');
+tinhnangLenh.push('tìm nhạc <code id="blue">từ khóa</code>');
+tinhnangThamso.push('<code id="blue">từ khóa</code>: Từ khóa tìm kiếm');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Chuyển đổi đơn vị');
+tinhnangLenh.push('<code id="blue">số lượng</code> <code id="orange">đơn vị</code> bằng bao nhiêu <code id="green">đơn vị</code>');
+tinhnangThamso.push('<code id="blue">số lượng</code>: Số lượng đơn vị<br> <code id="orange">đơn vị</code>: Đơn vị ban đầu (VD: cm)<br><code id="green">đơn vị</code>: Đơn vị muốn biết (VD: mm)');
+tinhnangGhichu.push('Hai đơn vị phải cùng loại: cm - dm (chiều dài), cm3 - dm3 (thể tích),... Giữa <code id="blue">số lượng</code> và <code id="orange">đơn vị</code> phải cách nhau 1 dấu cách. Ví dụ: <code id="blue">1</code> <code id="orange">cm2</code> bằng bao nhiêu <code id="green">dm2</code>');
+
+tinhnangTacvu.push('Danh ngôn mỗi ngày');
+tinhnangLenh.push('danh ngôn');
+tinhnangThamso.push('');
+tinhnangGhichu.push('Mỗi ngày chỉ có thể mở được 1 câu. Sau 30 ngày thì câu danh ngôn sẽ bắt đầu lại từ đầu');
+
+tinhnangTacvu.push('Chế độ tối');
+tinhnangLenh.push('chế độ tối');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Chơi game');
+tinhnangLenh.push('chơi game');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Mở danh sách ghi chú');
+tinhnangLenh.push('ghi chú');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Tạo ghi chú mới');
+tinhnangLenh.push('tạo ghi chú có nội dung là <code id="blue">nội dung</code>');
+tinhnangThamso.push('<code id="blue">nội dung</code>: Nội dung ghi chú muốn tạo');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Nhắc lại nội dung');
+tinhnangLenh.push('nhắc lại <code id="blue">nội dung</code>');
+tinhnangThamso.push('<code id="blue">nội dung</code>: Nội dung muốn nhắc lại');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Danh sách công việc');
+tinhnangLenh.push('danh sách công việc');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Danh sách dấu trang');
+tinhnangLenh.push('danh sách dấu trang');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Danh sách liên hệ');
+tinhnangLenh.push('danh sách liên hệ');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Lịch');
+tinhnangLenh.push('lịch');
+tinhnangThamso.push('');
+tinhnangGhichu.push('Lưu ý: Các sự kiện trong lịch sẽ được lặp lại hàng năm, không phải lịch làm việc.');
+
+tinhnangTacvu.push('Hỏi thời gian');
+tinhnangLenh.push('bây giờ mấy giờ, hôm nay thứ mấy, nay ngày bao nhiêu, tháng này tháng mấy, năm nay năm bao nhiêu');
+tinhnangThamso.push('');
+tinhnangGhichu.push('');
+
+tinhnangTacvu.push('Tải video YouTube');
+tinhnangLenh.push('tải video youtube <code id="blue">url</code>');
+tinhnangThamso.push('<code id="blue">url</code>: Địa chỉ video');
+tinhnangGhichu.push('Ví dụ: tải video youtube <code id="blue">https://www.youtube.com/watch?v=xxxxxxxxxxx</code>');
+/* - - - - KẾT THÚC - - - - */
+writeFrameHTML('7', '<center> <style> th, td{ padding: 16px; border: 1px solid #ccc; width: 44px } </style> <h1>Lịch <b style="color: blue; cursor: pointer" onclick="noteman4Save()" title="Bấm để lưu">[Lưu]</b></h1> <div id="lich" style="box-shadow: 0 0 16px 0 #ccc; border-radius: 16px; width: 640px; padding-top: 1px"> <h2>Tháng <select id="month" onchange="currentYear = parseInt(selectYear.value);currentMonth = parseInt(selectMonth.value);lichshowCalendar(currentMonth, currentYear);" style="font-size: 20px;"> <option value=0>1</option> <option value=1>2</option> <option value=2>3</option> <option value=3>4</option> <option value=4>5</option> <option value=5>6</option> <option value=6>7</option> <option value=7>8</option> <option value=8>9</option> <option value=9>10</option> <option value=10>11</option> <option value=11>12</option> </select> năm <label for="year"></label><input type="text" id="year" onchange="currentYear = parseInt(selectYear.value);currentMonth = parseInt(selectMonth.value);lichshowCalendar(currentMonth, currentYear);" style="font-size: 20px; width: 50px"/></h2> <table class="table table-bordered table-responsive-sm" id="calendar" style="padding: 4px; font-size: 18px; text-align: center;"> <tr style="background: #ccc;"> <th>CN</th> <th>T2</th> <th>T3</th> <th>T4</th> <th>T5</th> <th>T6</th> <th>T7</th> </tr> <tbody id="calendar-body"></tbody> </table> <hr class="sep-2" style="border: 0; height: 2px; background-image: linear-gradient(to right, #f0f0f0, #00b9ff, #59d941, #f0f0f0);"/> <b id="eventH" style="font-size: 25px"></b> <div id="lichEvent" style="padding: 16px"></div><br></div> </center>', 'noteman4Save();');
+writeFrameHTML('6', '<center><h1>Danh sách liên hệ <b style="color: blue; cursor: pointer" onclick="noteman3Save()" title="Bấm để lưu">[Lưu]</b></h1><div id="contact"></div><center><br><div style="border-radius: 16px; padding: 4px; box-shadow: 0 0 16px 0 #ccc; width: 150px; text-align: center; cursor: pointer" onclick="noteman3Save(); contactCreate();"><b>Tạo liên hệ mới</b></div></center>', "noteman3Save();");
+writeFrameHTML('4', '<h1 style="text-align: center">Dấu trang <b style="color: blue; cursor: pointer" onclick="noteman2Save()" title="Bấm để lưu">[Lưu]</b></h1><div style="box-shadow: 0 0 4px 0 #ccc; border-radius: 16px; padding: 4px" id="bookmarkLabel"> <select style="outline: none; font-size: 20px; border: 1px solid #ccc" onchange="bookmarkOnchange(this); noteman2Save()"> <option value="add" selected>Thêm</option> <option value="del">Xóa</option> </select> <input type="text" id="bookmarkURL" style="outline: none; font-size: 20px; border: 1px solid #ccc; border-width: 0 1px 0 0; padding: 4px; width: calc(50% - 78px)" placeholder="Nhập địa chỉ dấu trang"/><input type="text" id="bookmarkNAME" style="outline: none; font-size: 20px; border: 1px solid #ccc; border-width: 0 0 0 1px; padding: 4px; width: calc(50% - 78px)" placeholder="Nhập tên dấu trang"/> <button style="background-color: #008cff;outline: none;color: white;text-align: center;margin: 4px 2px;cursor: pointer;border-radius: 4px; font-size: 20px" onclick="bookmarkCreate(); noteman2Save()">Thêm</button> </div> <div id="bookmarkgood"></div>', "noteman2Save();");
+writeFrameHTML('3', writeTinhnang(tinhnangTacvu, tinhnangLenh, tinhnangThamso, tinhnangGhichu));
+writeFrameHTML('2', '<div class="todolist" id="todolist"><h1 style="text-align: center">Công việc (To-do list) <b style="color: blue; cursor: pointer" onclick="noteman1Save()" title="Bấm để lưu">[Lưu]</b></h1><input type="text" class="txtb" placeholder="Nhập CV và ấn Enter" style="width: 100%;border: none;border-bottom: 2px solid #000;background: none;padding: 10px;outline: none;font-size: 18px;" onchange="noteman1Save()"/><h3 style="text-align: center">Số công việc hoàn thành: <u id="compNum">0</u> công việc</h3><div class="notcomp" id="notcomp" onchange="noteman1Save();"></div><div id="comp" class="comp" onchange="noteman1Save();"></div></div>', "noteman1Save();");
+writeFrameHTML('1', '<center><h1>Danh sách ghi chú <b style="color: blue; cursor: pointer" onclick="notemanSave()" title="Bấm để lưu">[Lưu]</b></h1></center><div id="noteman"><div id="notemanL" onchange="notemanSave()"></div><center><div style="width: 30px; border: 1px solid #ccc; height: 30px; border-radius: 16px; text-align: center; color: grey; box-shadow: 0 0 4px 0 #ccc; font-size: 25px; margin-top: 16px; cursor: pointer" title="Tạo ghi chú mới" onclick="notemanNew()">+</div></center>', "notemanSave();");
+helpTitle.push("Đếm số 'từ' nói bậy");
+helpContent.push('<button onclick="var now = parseInt(document.getElementById('+"'NoiBaycount'"+').innerHTML); document.getElementById('+"'NoiBaycount'"+').innerHTML = now+1; var stt = document.getElementById('+"'NoiBaystt'"+');if(now <= 16){stt.innerHTML = '+"'- Bạn mới bắt đầu nói bậy thui. Hãy cố gắng bỏ dần dần nhé!'"+';}else if (now > 16 && now <= 50){stt.innerHTML = '+"'- Bạn nói bậy ngày một cao thủ hơn. Nhưng đừng tự hào, hãy bỏ nó nhé!'"+'}else if (now > 50 && now <= 100){stt.innerHTML = '+"'- Thật là đáng sợ! Bạn đã vào vòng xoáy của nói bậy rồi. Hãy bỏ ngay vì đây có lẽ là cơ hội cuối cùng'"+'}else if (now > 100 && now <= 500){stt.innerHTML = '+"'- Tui đã bảo bạn bỏ sao bạn hông bỏ zậy? HÃY BỎ NÓI BẬY NẾU KHÔNG BẠN SẼ PHẢI HỐI HẬN!'"+'}else if (now > 500 && now <= 1000){stt.innerHTML = '+"'- Okie, có lẽ tui không thể khuyên bạn bỏ nhưng tôi muốn khuyên bạn BỚT NÓI BẬY đi!! [^-^]. Cố lên nhé!'"+'}else if (now > 1000 && now <= 4444){stt.innerHTML = '+"'- Um [:(]. Tui đã lợi càn à cạn lời rồi. Tôi nghĩ bạn nên tìm một cách mạnh hơn để cai nghiện nói bậy!'"+'}else if (now > 4444){stt.innerHTML = '+"'- Con số 4444 là con số tối đa chương trình đếm số từ nói bậy cho phép. Nếu bạn vượt qua này thì....'"+'; stt.style = '+"'color: red;'"+'}; noteman5Save();">+1 từ nói bậy</button> <b id="NoiBaycount">0</b> lần nói bậy <i id="NoiBaystt"></i> <button onclick="document.getElementById('+"'NoiBaycount'"+').innerHTML = '+"'0'"+'; noteman5Save()">Đặt lại</button>');
+helpTitle.push("Logo - cho bạn nào chưa biết. Hehe");
+helpContent.push('<img src="favicon.ico" style="width: 100%" onclick="'+"this.setAttribute('style', 'width: 100%; -webkit-transform: rotate(' + (500 + Math.round(Math.random() * 500)) + 'deg); transition: transform 2s ease-out;');"+'"/>');
+var lichEvent={"1/1":["Tết Dương lịch"],"9/1":["Ngày Học sinh - Sinh viên Việt Nam"],"3/2":["Ngày thành lập Đảng Cộng sản Việt Nam"],"27/2":["Ngày Thầy thuốc Việt Nam"],"8/3":["Ngày Quốc tế Phụ nữ"],"20/3":["Ngày Quốc tế Hạnh phúc"],"22/3":["Ngày Nước sạch Thế giới"],"26/3":["Ngày thành lập Đoàn Thanh niên Cộng sản Hồ Chí Minh"],"27/3":["Ngày Thể thao Việt Nam"],"28/3":["Ngày thành lập lực lượng Dân quân tự vệ"],"1/4":["Cá tháng tư"],"21/4":["Ngày Sách Việt Nam"],"22/4":["Ngày Trái đất"],"30/4":["Ngày giải phóng Miền Nam thống nhất đất nước"],"1/5":["Quốc tế lao động"],"7/5":["Ngày chiến thắng Điện Biên Phủ"],"15/5":["Ngày thành lập Đội Thiếu niên Tiền phong Hồ Chí Minh"],"19/5":["Ngày sinh của Chủ tịch Hồ Chí Minh"],"1/6":["Ngày Quốc tế Thiếu nhi"],"5/6":["Ngày Bác Hồ ra đi tìm đường cứu nước","Ngày môi trường thế giới"],"28/6":["Ngày Gia đình Việt Nam"],"27/7":["Ngày Thương binh Liệt sĩ"],"19/8":["Ngày Cách mạng tháng Tám thành công"],"2/9":["Ngày Quốc khánh nước Cộng hoà Xã hội Chủ nghĩa Việt Nam"],"7/9":["Ngày thành lập Đài Truyền hình Việt Nam"],"13/10":["Ngày Doanh nhân Việt Nam"],"20/10":["Ngày thành lập Hội Phụ nữ Việt Nam"],"20/11":["Ngày Nhà giáo Việt Nam"],"22/12":["Ngày thành lập Quân đội Nhân dân Việt Nam"],"25/12":["Ngày Lễ Giáng Sinh"]};
+var today = new Date();
+var currentMonth = today.getMonth();
+var currentYear = today.getFullYear();
+var selectYear = document.getElementById("year"),
+	selectMonth = document.getElementById("month");
+var monthDate = today.getDate() + "/" + parseInt(today.getMonth()+1);
+var monthDateAm = getLunar(today.getDate(),today.getMonth()+1,today.getFullYear());
+var ii = 0, iii3 = false;
+setTimeout(function() {
+	homNiNgayGi("here");
+}, 1000);
+function homNiNgayGi(loc){
+var lichHeader = "<br><b>Lịch</b>: ";
+var minFormated = today.getMinutes() + "";
+if(minFormated.length == 1) {minFormated = "0" + minFormated;}
+var thuTrongTuan = ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ 5", "Thứ 6", "Thứ 7"];
+var timeHeader = "<b>Thời gian:</b> " + today.getHours() + ":" + minFormated + " - " + thuTrongTuan[today.getDay()] + " ngày " + today.getDate() + "/" + parseInt(today.getMonth()+1) + "/" + today.getFullYear();
+var congviecHeader = "<br><b>Số công việc cần làm:</b> " + document.getElementById("notcomp").children.length;
+var hdsdHeader = "<b>Hướng dẫn sử dụng</b>: Nhắn 'tính năng' để xem các tính năng<br>";
+while (ii < Object.keys(lichEvent).length) {
+	if(loc == "here"){
+		if (monthDateAm == "1/1"){
+			iii3 = true;
+			lichHeader += "Mừng 1 Tết";
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		} else if (monthDateAm == "10/3"){
+			iii3 = true;
+			lichHeader += "Giỗ tổ Hùng Vương";
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		}else if (monthDateAm == "2/1"){
+			iii3 = true;
+			lichHeader += "Mừng 2 Tết";
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		}else if (monthDateAm == "3/1"){
+			iii3 = true;
+			lichHeader += "Mừng 3 Tết";
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		} else if (monthDateAm == "30/12"){
+			iii3 = true;
+			lichHeader += "Tất niên năm " + (today.getFullYear()-1);
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		} else if (Object.keys(lichEvent)[ii] == monthDate && lichEvent[monthDate] != ""){
+			iii3 = true;
+			lichHeader += lichEvent[monthDate];
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+			break;
+		}
+	} else {
+		if (monthDateAm == "1/1"){
+			iii3 = true;
+			Messwrite("demo", 0, "Happy New Year bạn nhé! Hôm ni là Mùng một Tết đó! Nhắn 'lịch' để xem thêm các sự kiện khác");
+			break;
+		} else if (monthDateAm == "10/3"){
+			iii3 = true;
+			Messwrite("demo", 0, "Đừng quên chứ, hôm nay là ngày nhớ ơn cội nguồn! Ngày Giỗ tổ Hùng Vương đó! Nhắn 'lịch' để xem thêm các sự kiện khác");
+			break;
+		}else if (monthDateAm == "2/1"){
+			iii3 = true;
+			Messwrite("demo", 0, "Mùng 2 tết đi chúc tết được ai rồi nè?");
+			break;
+		}else if (monthDateAm == "3/1"){
+			iii3 = true;
+			Messwrite("demo", 0, "Đếm tiền lì xì đê chứ. Mùng 3 Tết đến nơi rồi kìa!");
+			break;
+		} else if (monthDateAm == "30/12"){
+			iii3 = true;
+			Messwrite("demo", 0, "Chúc bạn ăn tất niên vui vẻ nhé! Nhắn 'lịch' để xem thêm các sự kiện khác");
+			break;
+		} else if (Object.keys(lichEvent)[ii] == monthDate && lichEvent[monthDate] != ""){
+			iii3 = true;
+			Messwrite("demo", 0, "Hôm nay là "+lichEvent[monthDate]+" đó, nhớ hông nè? Nhắn 'lịch' để xem thêm các sự kiện khác");
+			break;
+		}
+	}
+	ii++;
+}
+if (iii3 == false) {
+	if(loc == "here"){
+		lichHeader += "Không có sự kiện. Nhắn 'lịch' để thêm sự kiện";
+			Messwrite("demo", 2, hdsdHeader + timeHeader + lichHeader + congviecHeader);
+	} else {
+		Messwrite("demo", 0, "Tiếc là hôm ni bạn hông có sự kiện gì cả! Nhắn 'lịch' để thêm sự kiện nhé!");
+	}
+}
+}
+var months = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+setTimeout(function() {lichshowCalendar(currentMonth, currentYear);}, 1000);
+writeHelpBox(helpTitle, helpContent);
+function chooseGame(before){
+	var butt = "";
+    butt += '<button style="background-color: #008cff;outline: none;color: white;padding: 4px 16px;text-align: center;margin: 4px 2px;cursor: pointer;border-radius: 16px;" onclick="' +
+        'gameTeencode()">Đoán Teencode</button>';
+	butt += '<button style="background-color: #008cff;outline: none;color: white;padding: 4px 16px;text-align: center;margin: 4px 2px;cursor: pointer;border-radius: 16px;" onclick="' +
+        'gameDovui()">Đố vui</button>';
+    setTimeout(function() {
+		if(before != undefined) {Messwrite("demo", 0, before);}
+        Messwrite("demo", 2, butt);
+    }, 2000);
+}
+var noteman = 0;
+notemanNew();
+function notemanNew(content) {
+    if (content == undefined) {
+        content = "Đánh nội dung của bạn...."
+    };
+    var noteman = document.getElementById("notemanL");
+    noteman.innerHTML += '<div style="border: 1px solid #ccc; border-radius: 16px;padding: 16px; background-color: white; margin-bottom: 16px;"><input id="notemanTitle" type="text" style="border: none; outline: none; font-size: 24px; margin: -16px; padding: 16px; box-shadow: 0 4px 10px -4px #ccc; border-radius: 16px 0 0 16px; width: calc(100% - 68px); background: none; border: 1px solid #ccc; border-width: 0 1px 1px 0; height: 61px" value="Đặt tiêu đề của bạn...." onchange="this.setAttribute(' + "'value'" + ', this.value); notemanSave()"/><div id="notemanControl" style="float: right; background: none; border-radius: 0 16px 16px 0; width: 100px; margin: -16px; text-align: center; border: 1px solid #ccc; border-width: 0 0 1px 1px; box-shadow: 0 4px 16px -4px #ccc; font-size: 16px;height: 60px"><b style="cursor: pointer; color: blue" onclick="notemanHide(this)">Mở GChú</b><br><b style="cursor: pointer; color: orange" onclick="notemanColor(this)">Đổi màu</b><br><b style="cursor: pointer; color: red" onclick="notemanDel(this)">Xóa ghi chú</b></div><div id="notemanHide" style="display: none"><div id="notemanContent"><textarea style="outline: none; width: 100%; height: 250px; border: none; background: none; resize: none;"  onchange="this.setAttribute(' + "'value'" + ', this.value); this.innerHTML = this.value; notemanSave();">' + content + '</textarea></div></div></div>';
+}
+function notemanHide(elm) {
+    var parent = elm.parentElement.parentElement;
+    if (noteman == 1) {
+        parent.querySelector("#notemanHide").style.display = "none";
+        parent.querySelector("#notemanTitle").style = "border: none; outline: none; font-size: 24px; margin: -16px; padding: 16px; box-shadow: 0 4px 10px -4px #ccc; border-radius: 16px 0 0 16px; width: calc(100% - 68px); background: none; border: 1px solid #ccc; border-width: 0 1px 1px 0; height: 61px";
+        parent.querySelector("#notemanControl").style = "float: right; background: none; border-radius: 0 16px 16px 0; width: 100px; margin: -16px; text-align: center; border: 1px solid #ccc; border-width: 0 0 1px 1px; box-shadow: 0 4px 16px -4px #ccc; font-size: 16px;height: 60px";
+        elm.innerHTML = 'Mở GChú';
+        noteman = 0;
+    } else {
+        parent.querySelector("#notemanHide").style.display = "block";
+        parent.querySelector("#notemanTitle").style = "border: none; outline: none; font-size: 24px; margin: -16px; padding: 16px; box-shadow: 0 4px 10px -4px #ccc; border-radius: 16px 0 0 16px; width: calc(100% - 68px); background: none; border: 1px solid #ccc; border-width: 0 1px 1px 0; height: 61px; margin-bottom: 16px";
+        parent.querySelector("#notemanControl").style = "float: right; background: none; border-radius: 0 16px 16px 0; width: 100px; margin: -16px; text-align: center; border: 1px solid #ccc; border-width: 0 0 1px 1px; box-shadow: 0 4px 16px -4px #ccc; font-size: 16px;height: 60px; margin-bottom: 16px";
+        elm.innerHTML = 'Đóng GChú';
+        noteman = 1;
+    }
+}
+function notemanColor(elm) {
+    var color = ["lightsalmon", "gold", "lightyellow", "lightgreen", "aqua", "royalblue", "plum", "pink", "chocolate", "silver", "white"];
+    var parent = elm.parentElement.parentElement;
+    var colorN = color.indexOf(parent.style.backgroundColor);
+    var index = colorN + 1;
+    if (index == color.length) {
+        index = 0
+    }
+    parent.style.backgroundColor = color[index];
+}
+function notemanDel(elm) {
+    var parent = elm.parentElement.parentElement;
+    parent.style = "";
+    parent.innerHTML = "";
+}
+var dovuiNow = "";
+function gameDovui(answer) {
+    var listCode=["Cắm vào run rẩy toàn thân. Rút ra nước chảy từ chân xuống sàn. Hỡi chàng công tử giàu sang. Cắm vào xin chớ vội vàng rút ra!","Ở đâu BA đứng trước HAI?","What is between the sky and earth?","Nơi nào có đường xá, nhưng không có xe cộ; có nhà ở, nhưng không có người; có siêu thị, công ty... nhưng không có hàng hóa... Đó là nơi nào dzậy?","2 con vịt đi trước 2 con vịt, 2 con vịt đi sau 2 con vịt, 2 con vịt đi giữa 2 con vịt. Hỏi có mấy con vịt?","Cái gì đen khi bạn mua nó, đỏ khi dùng nó và xám xịt khi vứt nó đi?","Thằng Vũ lực mạnh nhất, thằng Vũ hán độc nhất, thằng Vũ Nhôm vào tù. Vậy Vũ nào béo nhất?","Núi nào mà bị chặt ra từng khúc?","Trong 1 cuộc thi chạy, nếu bạn vượt qua người thứ 2 bạn sẽ đứng thứ mấy?","(Loạt câu hỏi về HÔN) Hôn con heo trong nhà gọi là...","(Loạt câu hỏi về HÔN) Mong được hôn gọi là...","(Loạt câu hỏi về HÔN) Vừa mới hôn gọi là...","(Loạt câu hỏi về HÔN) Hôn thêm cái nữa gọi là...","(Loạt câu hỏi về HÔN) Đang hôn mà bị đẩy ra gọi là...","(Loạt câu hỏi về HÔN) Không cho mà cứ hôn gọi là...","(Loạt câu hỏi về HÔN) Hẹn sẽ hôn gọi là...","(Loạt câu hỏi về HÔN) Vua hôn gọi là...","(Loạt câu hỏi về HÔN) Hôn chia tay gọi là...","(Loạt câu hỏi về HÔN) Vừa hôn vừa ngửi gọi là...","(Loạt câu hỏi về HÔN) Hôn vào không trung gọi là...","(Loạt câu hỏi về HÔN) Hôn trong mơ gọi là ...","(Loạt câu hỏi về HÔN) Hôn mà mà quá sớm thì gọi là...","(Loạt câu hỏi về HÔN) Rất thích hôn gọi là...","(Loạt câu hỏi về HÔN) Hôn mà bị hôn lại gọi là....","Loại nước giải khát nào chứa sắt và canxi?","Cái gì Adam có 2 mà Eva chỉ có 1?"];
+	var listCode1=["Tủ lạnh","Từ điển","And","Bản đồ","4","Than","Vũ trụ","Thái Sơn","Thứ 2","Hôn thú","Cầu hôn","Tân hôn","Tái hôn","Từ hôn","Ép hôn","Hứa hôn","Hoàng hôn","Ly hôn","Vị hôn","Hôn gió","Hôn ước","Tảo hôn","Kết hôn","Đính hôn","Cafe","Chữ A"];
+    if (answer == undefined) {
+        gameInKboard = "DOVUI";
+        var ranNum = Math.floor(Math.random() * (listCode.length));
+        dovuiNow = listCode1[ranNum];
+        Messwrite("demo", 1, "Tôi muốn chơi game ĐỐ VUI!");
+        setTimeout(function() {
+            Messwrite("demo", 0, "Okie. Vậy hãy thử giải câu đố sau nhé: " + listCode[ranNum]);
+        }, 1000);
+    } else {
+        answer = answer.replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "").toLowerCase();
+        var dapan = dovuiNow.replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "").toLowerCase();
+        if (answer.indexOf(dapan) >= 0) {
+            setTimeout(function() {
+                Messwrite("demo", 0, "Chúc mừng. Bạn đã đoán đúng! Đáp án chính xác của chúng ta là: " + dovuiNow);
+            }, 1000);
+			setTimeout(function() {
+				chooseGame("Bấm vào các nút dưới đây để chọn game:");
+			}, 5000);
+        } else {
+            setTimeout(function() {
+                Messwrite("demo", 0, "Tiếc quá. Bạn đã đoán sai rùi! Đáp án chính xác là: " + dovuiNow);
+            }, 1000);
+			setTimeout(function() {
+				chooseGame("Bấm vào các nút dưới đây để chọn game:");
+			}, 5000);
+        }
+        gameInKboard = "NONE";
+    }
+}
+var teenCodeNow = "";
+function gameTeencode(answer) {
+    var listCode = ["Xin chào là chao xìn", "Prosoft, you're best", "I love you", "Vietnam", "Việt Nam Tôi yêu", "Web5Ngay", "Chị Trợ lý Google", "I am the chuyên gia", "Năm 2020 có kỳ nghỉ Tết huyền thoại", "Teencode", "Thất bại là mẹ thành công", "Đố bạn đoán được hết câu này đó. Đố bạn đoán được đó. Khó lắm đó nhe! Bạn đã đoán được chưa?", "Tui, con ông cháu cha. Hehe", "Tui chịu thua"];
+    if (answer == undefined) {
+        gameInKboard = "TEENCODE";
+        var ranNum = Math.floor(Math.random() * (listCode.length));
+        teenCodeNow = listCode[ranNum];
+        Messwrite("demo", 1, "Tôi muốn chơi game ĐOÁN TEENCODE!");
+        setTimeout(function() {
+            Messwrite("demo", 0, "Okie. Vậy hãy thử đoán đoạn teencode theo quy tắc made by tui sau nhé: " + toTeenCode(teenCodeNow));
+        }, 1000);
+    } else {
+        answer = answer.replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "").toLowerCase();
+        var dapan = teenCodeNow.replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "").toLowerCase();
+        if (answer == dapan) {
+            setTimeout(function() {
+                Messwrite("demo", 0, "Chúc mừng. Bạn đã đoán đúng! Đáp án chính xác của chúng ta là: " + teenCodeNow);
+            }, 1000);
+			setTimeout(function() {
+				chooseGame("Bấm vào các nút dưới đây để chọn game:");
+			}, 7500);
+        } else {
+            setTimeout(function() {
+                Messwrite("demo", 0, "Tiếc quá. Bạn đã đoán sai rùi! Đáp án chính xác là: " + teenCodeNow);
+            }, 1000);
+			setTimeout(function() {
+				chooseGame("Bấm vào các nút dưới đây để chọn game:");
+			}, 7500);
+        }
+        gameInKboard = "NONE";
+    }
+}
+$('#demo').bind("DOMSubtreeModified", function() {
+    var elem = document.getElementById('demo');
+    elem.scrollTop = elem.scrollHeight;
+});
+$('#note-textarea').on('input', function() {
+    var val1 = $(this).val();
+    if (val1 != "") {
+        document.getElementById("start-record-btn").innerHTML = '<i class="fa fa-paper-plane fa-2x" style="color: blue" title="Gửi" onclick="qaa()"></i>';
+    } else {
+        document.getElementById("start-record-btn").innerHTML = '<i class="fa fa-microphone-slash fa-2x" style="color: red"  title="Kích hoạt giọng nói"></i>';
+    }
+});
+var thelastcmd = "", thelastcmdN = "";
+function getAnswer(input1) {
+    var input = input1.toLowerCase();
+    thelastcmd = input;
+    thelastcmdN = input1;
+    thelastcmd = thelastcmd.replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g, "");
+	if (thelastcmdN == "1234567890") {
+		funboxMode = 1;
+	}
+    for (var i = 0; i < user_profile.length; i++) {
+        for (var j = 0; j < user_profile[i].description.length; j++) {
+            if (input.includes((user_profile[i].description[j]).toLowerCase())) {
+                var length = user_profile[i].link.length;
+                if (user_profile[i].dothis != undefined) {
+                    dothis(user_profile[i].dothis);
+                }
+                return user_profile[i].link[Math.floor(Math.random() * length)];
+            }
+        }
+    }
+    setTimeout(function() {
+        window.open("https://www.google.com/search?q=" + thelastcmd);
+    }, 2000);
+    return "Đây là thông tin tôi tìm được trên Google...";
+}
+function Messwrite(elm, loai, mess) {
+    var doituong = document.getElementById(elm);
+    if (loai == 0) {
+        responsiveVoice.speak(mess, "Vietnamese Male");
+        doituong.innerHTML += '<div style="border:2px solid #1fadff;background-color:#1ff0ff;border-radius:4px;padding: 4px; margin-bottom: 4px; font-size: 30px;">' + mess + '</div>';
+    } else if (loai == 1) {
+        doituong.innerHTML += '<div style="border:2px solid #ff6d1f;background-color:#ffb41f;border-radius:4px;padding: 4px; margin-bottom: 4px; font-size: 30px;">' + mess + '</div>';
+    } else if (loai == 2) {
+        doituong.innerHTML += '<div style="border:2px solid #1fadff;background-color:#1ff0ff;border-radius:4px;padding: 4px; margin-bottom: 4px; font-size: 30px;">' + mess + '</div>';
+    }
+    dragElement(document.getElementById("divMove"));
+}
+function qaa() {
+	notemanSave();
+	noteman1Save();
+	noteman2Save();
+	noteman3Save();
+	noteman4Save();
+    document.getElementById("start-record-btn").innerHTML = '<i class="fa fa-microphone-slash fa-2x" style="color: red" title="Kích hoạt giọng nói"></i>';
+    var value = document.getElementById("note-textarea");
+    var check = value.value.replace(/ /g, "");
+		if (gameInKboard == "NONE") {
+			if (check == "") {} else {
+				Messwrite("demo", 1, value.value);
+				var an = getAnswer(value.value);
+				value.value = "";
+				setTimeout(function() {
+					Messwrite("demo", 0, an);
+				}, 1000);
+			}
+		} else {
+			if (gameInKboard == "TEENCODE") {
+				gameTeencode(value.value);
+			} else if (gameInKboard == "DOVUI") {
+				gameDovui(value.value);
+			} 
+			if (check == "") {} else {
+				Messwrite("demo", 1, value.value);
+				value.value = "";
+			}
+		}
+}
+var onoff = 0;
+$('#start-record-btn').on('click', function(e) {
+    Troly();
+});
+function Troly() {
+    var but = document.getElementById("start-record-btn");
+    if (onoff == 0) {
+        if (but.innerHTML != '<i class="fa fa-paper-plane fa-2x" style="color: blue" title="Gửi" onclick="qaa()"></i>') {
+            if (noteContent.length) {
+                noteContent += ' ';
+            }
+            recognition.start();
+            onoff = 1;
+            but.innerHTML = '<i class="fa fa-microphone fa-2x" style="color: green" title="Hủy kích hoạt giọng nói"></i>';
+        } else {
+            document.getElementById("start-record-btn").innerHTML = '<i class="fa fa-microphone-slash fa-2x" style="color: red" title="Kích hoạt giọng nói"></i>';
+        }
+    } else {
+        recognition.stop();
+        onoff = 0;
+        setTimeout(function() {
+            var val1 = document.getElementById("note-textarea").value;
+            if (val1 != "") {
+                but.innerHTML = '<i class="fa fa-paper-plane fa-2x" style="color: blue" title="Gửi" onclick="qaa()"></i>';
+            } else {
+                but.innerHTML = '<i class="fa fa-microphone-slash fa-2x" style="color: red"  title="Kích hoạt giọng nói"></i>';
+            }
+        }, 500);
+    }
+}
+/*
+setTimeout(function() {
+bookmarkWrite(0,"https://vtv.vn/", "VTV");
+bookmarkWrite(0,"https://vnexpress.net/", "VnExpress");
+bookmarkWrite(0,"https://chat.zalo.me/", "Zalo");
+bookmarkWrite(0,"https://coccoc.com/", "Cốc Cốc");
+bookmarkWrite(0,"https://tinhte.vn/", "Tinh Tế");
+bookmarkWrite(0,"https://zingmp3.vn/", "Zing MP3");
+bookmarkWrite(0,"https://google.com.vn/", "Google");
+bookmarkWrite(0,"https://facebook.com/", "Facebook");
+bookmarkWrite(0,"https://www.youtube.com/", "YouTube");
+bookmarkWrite(0,"https://www.messenger.com/", "Messenger");
+bookmarkWrite(0,"https://mail.google.com/", "Gmail");
+}, 500);
+*/
+var pipL=localStorage.getItem("pip");function noteman5Save(){localStorage.setItem("pip",document.getElementById("NoiBaycount").innerHTML);localStorage.getItem("pip")}null!=pipL&&(document.getElementById("NoiBaycount").innerHTML=pipL);
+var calL=localStorage.getItem("cal");function noteman4Save(){localStorage.setItem("cal",JSON.stringify(lichEvent));localStorage.getItem("cal")}null!=JSON.parse(calL)&&(lichEvent=JSON.parse(calL));
+var contactL=localStorage.getItem("contact");function noteman3Save(){var t=document.getElementById("contact");localStorage.setItem("contact",t.innerHTML)}null!=contactL&&(document.getElementById("contact").innerHTML=contactL);
+var bookmarkL=localStorage.getItem("bookmark");function noteman2Save(){var o=document.getElementById("bookmarkgood");localStorage.setItem("bookmark",o.innerHTML)}null!=bookmarkL&&(document.getElementById("bookmarkgood").innerHTML=bookmarkL);
+var todolistL=localStorage.getItem("todolist1"),todolist2L=localStorage.getItem("todolist2");function noteman1Save(){var t=document.getElementById("notcomp");localStorage.setItem("todolist1",t.innerHTML);var e=document.getElementById("comp");localStorage.setItem("todolist2",e.innerHTML),document.getElementById("compNum").innerHTML=document.getElementById("comp").children.length}null!=todolistL&&(document.getElementById("notcomp").innerHTML=todolistL),null!=todolist2L&&(document.getElementById("comp").innerHTML=todolist2L);
+function truCompNum(e){"comp"==$(e).parent().parent().attr("id")&&(document.getElementById("compNum").innerHTML=parseInt(document.getElementById("compNum").innerHTML)-1)}
+var notemanLocal=localStorage.getItem("noteman");function notemanSave(){var n=document.getElementById("notemanL");localStorage.setItem("noteman",n.innerHTML)}null!=notemanLocal&&(document.getElementById("notemanL").innerHTML=notemanLocal);
+function themEvent(e,t,n,o){e.innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+n+", "+o+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><input type="text" placeholder="Tiêu đề sự kiện" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 66px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px" onchange="this.setAttribute(\'value\', this.value); lichUpdate(this.parentNode, '+n+", "+o+'); noteman4Save();" value="'+t+'"/>'}
+function lichUpdate(e,t,n){noteman4Save();var a=document.getElementById("lichEvent").getElementsByTagName("input");lichEvent[t+"/"+n]=[];for(var l=0;l<a.length;l++)lichEvent[t+"/"+n].push(a[l].value)}
+function showEvent(e,n,t){document.getElementById("eventH").innerHTML="Sự kiện ngày "+e+" tháng "+n+" năm "+t;var i=lichEvent[e+"/"+n];if(document.getElementById("lichEvent").innerHTML='<button style="width: 100%; border-radius: 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px" onclick="themEvent(this.parentNode, \'\', '+e+", "+n+')">Thêm sự kiện</button>',null!=i)for(var o=0;o<i.length;o++)themEvent(document.getElementById("lichEvent"),i[o],e,n);"10/3"==getLunar(e,n,t)&&(document.getElementById("lichEvent").innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+e+", "+n+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><div style="display: inline-block; border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 76px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px; text-align: left; font-family: Arial, Helvetica, sans-serif;">Giỗ tổ Hùng Vương</div>'),"30/12"==getLunar(e,n,t)&&(document.getElementById("lichEvent").innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+e+", "+n+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><div style="display: inline-block; border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 76px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px; text-align: left; font-family: Arial, Helvetica, sans-serif;">Tất niên năm '+(today.getFullYear()-1)+'</div>'),"2/1"==getLunar(e,n,t)&&(document.getElementById("lichEvent").innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+e+", "+n+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><div style="display: inline-block; border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 76px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px; text-align: left; font-family: Arial, Helvetica, sans-serif;">Mùng 2 Tết</div>'),"3/1"==getLunar(e,n,t)&&(document.getElementById("lichEvent").innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+e+", "+n+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><div style="display: inline-block; border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 76px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px; text-align: left; font-family: Arial, Helvetica, sans-serif;">Mùng 3 Tết</div>'),"1/1"==getLunar(e,n,t)&&(document.getElementById("lichEvent").innerHTML+='<button onclick="this.nextSibling.remove(); this.remove(); noteman4Save(); lichUpdate(this.parentNode, '+e+", "+n+');" style="border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; background: white; border-radius: 16px 0 0 16px; outline: none; padding: 4px; font-size: 18px; margin: 4px; cursor: pointer; color: red">Xóa</button><div style="display: inline-block; border: 1px solid #ccc; box-shadow: 0 0 2px 0 aqua; width: calc(100% - 76px); border-radius: 0 16px 16px 0; outline: none; padding: 4px; font-size: 18px; margin: 4px; text-align: left; font-family: Arial, Helvetica, sans-serif;">Mùng 1 Tết</div>')}
+function lichshowCalendar(e,t){for(var i4=0;i4<Object.keys(lichEvent).length;i4++)0==lichEvent[Object.keys(lichEvent)[i4]].length&&delete lichEvent[Object.keys(lichEvent)[i4]];var a=new Date(t,e).getDay(),n=32-new Date(t,e,32).getDate(),d=document.getElementById("calendar-body");d.innerHTML="",selectYear.value=t,selectMonth.value=e;for(var o=1,r=0;r<6;r++){for(var c=document.createElement("tr"),l=0;l<7;l++)if(0===r&&l<a){var u=document.createElement("td"),i=document.createTextNode("");u.appendChild(i),c.appendChild(u)}else{if(n<o)break;u=document.createElement("td");var h=document.createAttribute("onclick");h.value="showEvent("+o+", "+(e+1)+", "+t+")",u.setAttributeNode(h);for(var m=0;m<Object.keys(lichEvent).length;m++){o+"/"+(e+1)!=Object.keys(lichEvent)[m]&&"10/3"!=getLunar(o,e+1,t)&&"1/1"!=getLunar(o,e+1,t)&&"2/1"!=getLunar(o,e+1,t)&&"3/1"!=getLunar(o,e+1,t)&&"30/12"!=getLunar(o,e+1,t)||(u.style="background: #03fc28")}i=document.createTextNode(o);o===today.getDate()&&t===today.getFullYear()&&e===today.getMonth()&&(u.style.backgroundColor="aqua",setTimeout(function(){showEvent(o,e+1,t)},1e3));var p=document.createElement("i"),s=document.createElement("br"),v=document.createTextNode(getLunar(o,e+1,t));p.appendChild(v),p.style="color: grey; font-size: 14px",u.appendChild(i),u.appendChild(s),u.appendChild(p),c.appendChild(u),o++}d.appendChild(c)}}
+function Lunar(){this.isleap=!1,this.lunarDay=0,this.lunarMonth=0,this.lunarYear=0}
+function Solar(){this.solarDay=0,this.solarMonth=0,this.solarYear=0}
+function LunarSolarConverter(){this.lunar_month_days=[1887,5780,5802,19157,2742,50359,1198,2646,46378,7466,3412,30122,5482,67949,2396,5294,43597,6732,6954,36181,2772,4954,18781,2396,54427,5274,6730,47781,5800,6868,21210,4790,59703,2350,5270,46667,3402,3496,38325,1388,4782,18735,2350,52374,6804,7498,44457,2906,1388,29294,4700,63789,6442,6804,56138,5802,2772,38235,1210,4698,22827,5418,63125,3476,5802,43701,2484,5302,27223,2646,70954,7466,3412,54698,5482,2412,38062,5294,2636,32038,6954,60245,2772,4826,43357,2394,5274,39501,6730,72357,5800,5844,53978,4790,2358,38039,5270,87627,3402,3496,54708,5484,4782,43311,2350,3222,27978,7498,68965,2904,5484,45677,4700,6444,39573,6804,6986,19285,2772,62811,1210,4698,47403,5418,5780,38570,5546,76469,2420,5302,51799,2646,5414,36501,3412,5546,18869,2412,54446,5276,6732,48422,6822,2900,28010,4826,92509,2394,5274,55883,6730,6820,47956,5812,2778,18779,2358,62615,5270,5450,46757,3492,5556,27318,4718,67887,2350,3222,52554,7498,3428,38252,5468,4700,31022,6444,64149,6804,6986,43861,2772,5338,35421,2650,70955,5418,5780,54954,5546,2740,38074,5302,2646,29991,3366,61011,3412,5546,43445,2412,5294,35406,6732,72998,6820,6996,52586,2778,2396,38045,5274,6698,23333,6820,64338,5812,2746,43355,2358,5270,39499,5450,79525,3492,5548],this.solar_1_1=[1887,966732,967231,967733,968265,968766,969297,969798,970298,970829,971330,971830,972362,972863,973395,973896,974397,974928,975428,975929,976461,976962,977462,977994,978494,979026,979526,980026,980558,981059,981559,982091,982593,983124,983624,984124,984656,985157,985656,986189,986690,987191,987722,988222,988753,989254,989754,990286,990788,991288,991819,992319,992851,993352,993851,994383,994885,995385,995917,996418,996918,997450,997949,998481,998982,999483,1000014,1000515,1001016,1001548,1002047,1002578,1003080,1003580,1004111,1004613,1005113,1005645,1006146,1006645,1007177,1007678,1008209,1008710,1009211,1009743,1010243,1010743,1011275,1011775,1012306,1012807,1013308,1013840,1014341,1014841,1015373,1015874,1016404,1016905,1017405,1017937,1018438,1018939,1019471,1019972,1020471,1021002,1021503,1022035,1022535,1023036,1023568,1024069,1024568,1025100,1025601,1026102,1026633,1027133,1027666,1028167,1028666,1029198,1029699,1030199,1030730,1031231,1031763,1032264,1032764,1033296,1033797,1034297,1034828,1035329,1035830,1036362,1036861,1037393,1037894,1038394,1038925,1039427,1039927,1040459,1040959,1041491,1041992,1042492,1043023,1043524,1044024,1044556,1045057,1045558,1046090,1046590,1047121,1047622,1048122,1048654,1049154,1049655,1050187,1050689,1051219,1051720,1052220,1052751,1053252,1053752,1054284,1054786,1055285,1055817,1056317,1056849,1057349,1057850,1058382,1058883,1059383,1059915,1060415,1060947,1061447,1061947,1062479,1062981,1063480,1064012,1064514,1065014,1065545,1066045,1066577,1067078,1067578,1068110,1068611,1069112,1069642,1070142,1070674,1071175,1071675,1072207,1072709,1073209,1073740,1074241,1074741,1075273,1075773,1076305,1076807,1077308,1077839,1078340,1078840,1079372,1079871,1080403,1080904],this.GetBitInt=function(t,r,a){return(t&(1<<r)-1<<a)>>a},this.SolarToInt=function(t,r,a){return r=(r+9)%12,365*(t=parseInt(t)-parseInt(r/10))+parseInt(t/4)-parseInt(t/100)+parseInt(t/400)+parseInt((306*r+5)/10)+(a-1)},this.SolarFromInt=function(t){var r=parseInt((1e4*t+14780)/3652425),a=t-(365*r+parseInt(r/4)-parseInt(r/100)+parseInt(r/400));a<0&&(a=t-(365*--r+parseInt(r/4)-parseInt(r/100)+parseInt(r/400)));var n=parseInt((100*a+52)/3060),s=(n+2)%12+1;r+=parseInt((n+2)/12);var o=a-parseInt((306*n+5)/10)+1,e=new Solar;return e.solarYear=parseInt(r),e.solarMonth=parseInt(s),e.solarDay=parseInt(o),e},this.LunarToSolar=function(t){var r=this.lunar_month_days[t.lunarYear-this.lunar_month_days[0]],a=this.GetBitInt(r,4,13),n=0,s=a;t.isleap||(s=t.lunarMonth<=a||0==a?t.lunarMonth-1:t.lunarMonth);for(var o=0;o<s;o++)n+=1==this.GetBitInt(r,1,12-o)?30:29;n+=t.lunarDay;var e=this.solar_1_1[t.lunarYear-this.solar_1_1[0]],i=this.GetBitInt(e,12,9),l=this.GetBitInt(e,4,5),h=this.GetBitInt(e,5,0);return this.SolarFromInt(this.SolarToInt(i,l,h)+n-1)},this.SolarToLunar=function(t){var r=new Lunar,a=t.solarYear-this.solar_1_1[0],n=t.solarYear<<9|t.solarMonth<<5|t.solarDay;this.solar_1_1[a]>n&&a--;var s=this.solar_1_1[a],o=this.GetBitInt(s,12,9),e=this.GetBitInt(s,4,5),i=this.GetBitInt(s,5,0),l=this.SolarToInt(t.solarYear,t.solarMonth,t.solarDay)-this.SolarToInt(o,e,i),h=this.lunar_month_days[a],I=this.GetBitInt(h,4,13),u=a+this.solar_1_1[0],p=1;l+=1;for(var _=0;_<13;_++){var v=1==this.GetBitInt(h,1,12-_)?30:29;if(!(v<l))break;p++,l-=v}var B=parseInt(l);return r.lunarYear=u,r.lunarMonth=p,r.isleap=!1,0!=I&&I<p&&(r.lunarMonth=p-1,p==I+1&&(r.isleap=!0)),r.lunarDay=B,r}}
+function getLunar(r,a,n){var o=new LunarSolarConverter,l=new Solar;l.solarYear=n,l.solarMonth=a,l.solarDay=r;var e=o.SolarToLunar(l);return e.lunarDay+"/"+e.lunarMonth}
+function contactCreate(){document.getElementById("contact").innerHTML+='<div id="contactCard" style="box-shadow: 0 0 4px 0 #ccc; border-radius: 16px; padding: 4px; font-size: 20px; width: 305px; margin: 4px; display: inline-block;"><center><font color="red" style="cursor: pointer; margin-top: 4px;" onclick="this.parentNode.parentNode.remove()"><i class="fa fa-trash"></i> Xóa liên hệ</font></center><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Họ tên" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Biệt danh" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Sinh nhật" style="width: calc(50% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Giới tính" style="width: calc(50% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Địa chỉ" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px;"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Số điện thoại" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Email" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Mạng xã hội" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Công việc" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/><input onchange="this.setAttribute(\'value\', this.value); noteman3Save()" type="text" placeholder="Ghi chú" style="width: calc(100% - 8px);border: 0;border-bottom: 2px solid #9b9b9b;outline: 0;margin: 4px; font-size: 18px"/> </div>'}
+function bookmarkWrite(r,o,i){var e=document.getElementById("bookmarkgood");o=o.replace("https://", "");o=o.replace("http://", "");var t=o;0==r&&(t="https://api.faviconkit.com/"+o+"/32"),16<i.length&&(i=i.substring(0,16)+"..."),e.innerHTML+="<div onclick=\"bookmarkWinopen('"+o+'\',this)" style="width: 88px; cursor: pointer; display: inline-flex; flex-direction: column; padding: 4px; border-radius: 16px; margin: 4px; background: white" class="bookmarkDoiTuong"><center><img src="'+t+'" style="width: 50px; box-shadow: 0 0 4px 0 #ccc; border-radius: 16px; padding: 4px; border: 1px solid #ccc"/><br><b style="word-wrap: break-word;" id="bookmarkName">'+i+"</b></center></div>";}
+function bookmarkWinopen(o,e){0==bookmarkdelMode?window.open(o):(e.style.background="#ccc",setTimeout(function(){e.remove()},444))}
+function bookmarkCreate(){var e=document.getElementById("bookmarkNAME").value,o=document.getElementById("bookmarkURL").value;""!=e&&""!=o&&bookmarkWrite(0,o,e)}
+function bookmarkOnchange(e){bookmarkdelMode="add"==e.value?(document.getElementById("bookmarkLabel").innerHTML='<select style="outline: none; font-size: 20px; border: 1px solid #ccc" onchange="bookmarkOnchange(this); noteman2Save()"> \t<option value="add" selected>Thêm</option> \t<option value="del">Xóa</option> </select> <input type="text" id="bookmarkURL" style="outline: none; font-size: 20px; border: 1px solid #ccc; border-width: 0 1px 0 0; padding: 4px; width: calc(50% - 78px)" placeholder="Nhập địa chỉ dấu trang"/><input type="text" id="bookmarkNAME" style="outline: none; font-size: 20px; border: 1px solid #ccc; border-width: 0 0 0 1px; padding: 4px; width: calc(50% - 78px)" placeholder="Nhập tên dấu trang"/> <button style="background-color: #008cff;outline: none;color: white;text-align: center;margin: 4px 2px;cursor: pointer;border-radius: 4px; font-size: 20px" onclick="bookmarkCreate(); noteman2Save()">Thêm</button>',0):(document.getElementById("bookmarkLabel").innerHTML='<select style="outline: none; font-size: 20px; border: 1px solid #ccc" onchange="bookmarkOnchange(this); noteman2Save()"> \t<option value="add">Thêm</option> \t<option value="del" selected>Xóa</option> </select> <button style="outline: none;border: none;background:none;text-align: center;margin: 4px 2px;cursor: pointer; cursor: default;font-size: 20px">Bấm vào dấu trang bất kì để xóa nó</button>',1)}
+function writeHelpBox(e,t){for(var i=document.getElementById("hideDiv"),d="",o=0;o<e.length;o++)d+='<div class="tab"><input type="checkbox" class="helpinput" id="chck'+o+'"><label class="tab-label" for="chck'+o+'">'+e[o]+'</label><div class="tab-content">'+t[o]+"</div></div>";i.innerHTML+='<style>.helpinput {position: absolute;opacity: 0;z-index: -1;}.tabs {border-radius: 0 0 16px 16px;overflow: auto; height: 250px;box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5); padding-bottom: 16px; max-width: 250px; background: white}.tab {width: 100%;color: white;overflow: hidden; margin-top: 16px}.tab-label {display: flex;justify-content: space-between;padding: 1em;background: #000d44;font-weight: bold;cursor: pointer; }.tab-content {max-height: 0;padding: 0;color: #000d44;background: white;transition: all 0.35s;}input:checked ~ .tab-content {max-height: 100%;padding: 16px;}</style><div id="helpBox" style="display: none"><div id="divMove" style="position: absolute;z-index: 1;border: 1px solid #d3d3d3; border-radius: 16px; text-align: justify; max-width: 250px;"><div id="divMoveheader" style="padding: 10px;cursor: move;z-index: 2;background-color: #2196F3;color: #fff;text-align: center; border-radius: 16px 16px 0 0;"><b>FUNBOX <u onclick="document.getElementById(\'helpBox\').style.display=\'none\';" style="cursor: pointer;">(ĐÓNG)</u></b></div><div class="tabs">'+d+"</div></div></div>"}
+function writeTinhnang(r,o,t,e){for(var c="",l=0;l<r.length;l++)c+='<tr><td class="tg-n9g5">'+r[l]+'</td><td class="tg-n9g5">'+o[l]+'</td><td class="tg-n9g5">'+t[l]+'</td><td class="tg-n9g5">'+e[l]+"</td></tr>";return'<h1 style="text-align:center">Danh sách tính năng</h1><style type="text/css">.tg  {border-collapse:collapse;border-spacing:0;border-color:black; width: 100%; line-height: 18px} .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#aabcfe;color:#669;background-color:#e8edff;} .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#aabcfe;color:#039;background-color:#b9c9fe;} .tg .tg-n9g5{background-color:#ffffff;color:#000000;border-color:inherit;text-align:left;vertical-align:top} .tg .tg-mxqw{font-weight:bold;background-color:#cccccc;color:#000000;border-color:inherit;text-align:center;vertical-align:top} #blue{background: #ccc; border-radius: 4px; color: blue;} #red{background: #ccc; border-radius: 4px; color: red;} #orange{background: #ccc; border-radius: 4px; color: orange;} #green{background: #ccc; border-radius: 4px; color: green;} #hot{background: red; border-radius: 4px; color: white; padding: 2px;}</style><table class="tg"><tr><th class="tg-mxqw">Tác vụ</th> <th class="tg-mxqw">Lệnh</th> <th class="tg-mxqw">Tham số</th> <th class="tg-mxqw">Ghi chú</th></tr>'+c+"</table>"}
+function notemanCom(o){var n=$(o).parent();$(".todolist .comp").append(n),$(o).remove()}
+$(".todolist .txtb").on("keyup",function(t){if(13==t.keyCode&&""!=$(".todolist .txtb").val()){noteman1Save();var o=$("<div class='task'></div>").text($(".todolist .txtb").val()),a=$("<i class='fas fa-trash-alt' onclick='truCompNum(this); this.parentNode.remove();'></i>"),i=$("<i class='fas fa-check' onclick='notemanCom(this);noteman1Save();'></i>");o.append(a,i),$(".todolist .notcomp").append(o),$(".todolist .txtb").val("")}});
+function writeFrameHTML(t,e,i){null==i&&(i=""),document.getElementById("webFrameHide").innerHTML+='<div id="webFrame'+t+'" style="display: none; top: 0;left: 0;position: absolute; background: white; width: calc(100% - 32px); padding: 16px; z-index: 1; height: calc(95% - 1px); overflow: auto"><style>.todolist .task {width: calc(100% - 35px);background: #f5f5f0;padding: 18px;margin: 6px 0;overflow: hidden;}.todolist .task i {float: right;margin-left: 20px;cursor: pointer;}.todolist .comp .task {background: rgba(0, 0, 0, .5);color: #fff;}</style><div style="border-radius: 4px;font-size: 20px;padding: 4px;background: #ccc;top: 16px;left: 16px;position: absolute; z-index: 1" onclick="document.getElementById(\'webFrame'+t+"').style.display='none'; "+i+'"><font color="red" style="cursor: pointer;"><i class="fa fa-times" title="Đóng"></i> Đóng</font></div><div id="webFrame2Content">'+e+"</div></div>"}
+function sleep(e){for(var t=(new Date).getTime(),n=0;n<1e7&&!((new Date).getTime()-t>e);n++);}
+function getCookie(e){for(var n=e+"=",t=decodeURIComponent(document.cookie).split(";"),o=0;o<t.length;o++){for(var r=t[o];" "==r.charAt(0);)r=r.substring(1);if(0==r.indexOf(n))return r.substring(n.length,r.length)}return""}
+function setCookie(e,t,i){var o=new Date;o.setTime(o.getTime()+24*i*60*60*1e3);var n="expires="+o.toUTCString();document.cookie=e+"="+t+";"+n+";path=/"}
+function dragElement(n){var t=0,o=0,u=0,l=0;function e(e){(e=e||window.event).preventDefault(),u=e.clientX,l=e.clientY,document.onmouseup=m,document.onmousemove=d}function d(e){(e=e||window.event).preventDefault(),t=u-e.clientX,o=l-e.clientY,u=e.clientX,l=e.clientY,n.style.top=n.offsetTop-o+"px",n.style.left=n.offsetLeft-t+"px"}function m(){document.onmouseup=null,document.onmousemove=null}document.getElementById(n.id+"header")?document.getElementById(n.id+"header").onmousedown=e:n.onmousedown=e}
+try{var SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition,recognition=new SpeechRecognition}catch(e){console.error(e),$(".no-browser-support").show(),$(".app").hide()}var noteTextarea=$("#note-textarea"),notesList=$("ul#notes"),noteContent="";recognition.continuous=!0,recognition.onresult=function(e){var n=e.resultIndex,o=e.results[n][0].transcript;1==n&&o==e.results[0][0].transcript||noteTextarea.val(o)},recognition.onstart=function(){instructions.text("Voice recognition activated. Try speaking into the microphone.")},recognition.onspeechend=function(){instructions.text("You were quiet for a while so voice recognition turned itself off.")},recognition.onerror=function(e){"no-speech"==e.error&&instructions.text("No speech was detected. Try again.")};
+function showGetResult(t,e){var n=null;return $.ajax({url:t,type:"get",dataType:e,async:!1,success:function(t){n=t}}),n}
+function toTeenCode(e){return e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=(e=e.replace(/b/g,"|3")).replace(/B/g,"|3")).replace(/l/g,"|_")).replace(/L/g,"|_")).replace(/không/g,"h0k")).replace(/khong/g,"h0k")).replace(/hông/g,"h0k")).replace(/hong/g,"h0k")).replace(/phò/g,"4`")).replace(/hài/g,"2`")).replace(/Gi/g,"J")).replace(/ r/g," z")).replace(/ R/g," z")).replace(/d/g,"|)")).replace(/D/g,"|)")).replace(/ie/g,"j")).replace(/iế/g,"j'")).replace(/i\u1EC3/g,"j")).replace(/i\u1EC7/g,"j.")).replace(/đ/g,"+)")).replace(/Đ/g,"+)")).replace(/í/g,"j'")).replace(/ì/g,"j`")).replace(/i/g,"j")).replace(/ị/g,"j.")).replace(/ỉ/g,"j")).replace(/ĩ/g,"j~")).replace(/gj`/g,"ji`")).replace(/Gj`/g,"ji`")).replace(/gj /g,"ji`")).replace(/gj/g,"j")).replace(/y/g,"ij")).replace(/ý/g,"ij'")).replace(/ỳ/g,"ij`")).replace(/ỵ/g,"ij.")).replace(/ỹ/g,"ij~")).replace(/ỷ/g,"ij?")).replace(/ư/g,"u")).replace(/Ư/g,"u")).replace(/ú/g,"u'")).replace(/Ú/g,"u'")).replace(/ứ/g,"u'")).replace(/Ứ/g,"u'")).replace(/ù/g,"u`")).replace(/Ù/g,"u`")).replace(/ừ/g,"u`")).replace(/Ừ/g,"u`")).replace(/ụ/g,"u.")).replace(/Ụ/g,"u.")).replace(/ự/g,"u.")).replace(/Ự/g,"u.")).replace(/ủ/g,"u?")).replace(/Ủ/g,"u?")).replace(/ử/g,"u?")).replace(/Ử/g,"u?")).replace(/ũ/g,"u~")).replace(/Ũ/g,"u~")).replace(/ữ/g,"u~")).replace(/Ữ/g,"u~")).replace(/o/g,"0")).replace(/ô/g,"0")).replace(/ơ/g,"0")).replace(/O/g,"0")).replace(/Ô/g,"0")).replace(/Ơ/g,"0")).replace(/ó/g,"0'")).replace(/ố/g,"0'")).replace(/ớ/g,"0'")).replace(/Ó/g,"0'")).replace(/Ố/g,"0'")).replace(/Ớ/g,"0'")).replace(/ò/g,"0`")).replace(/ồ/g,"0`")).replace(/ờ/g,"0`")).replace(/Ò/g,"0`")).replace(/Ồ/g,"0`")).replace(/Ờ/g,"0`")).replace(/ọ/g,"0.")).replace(/ộ/g,"0.")).replace(/ợ/g,"0.")).replace(/Ọ/g,"0.")).replace(/Ộ/g,"0.")).replace(/Ợ/g,"0.")).replace(/ỏ/g,"0?")).replace(/ổ/g,"0?")).replace(/ở/g,"0?")).replace(/Ỏ/g,"0?")).replace(/Ổ/g,"0?")).replace(/Ở/g,"0?")).replace(/õ/g,"0~")).replace(/ỗ/g,"0~")).replace(/ỡ/g,"0~")).replace(/Õ/g,"0~")).replace(/Ỗ/g,"0~")).replace(/Ỡ/g,"0~")).replace(/e/g,"3")).replace(/E/g,"3")).replace(/ê/g,"3")).replace(/Ê/g,"3")).replace(/é/g,"3'")).replace(/É/g,"3'")).replace(/ế/g,"3'")).replace(/Ế/g,"3'")).replace(/è/g,"3`")).replace(/È/g,"3`")).replace(/ề/g,"3`")).replace(/Ề/g,"3`")).replace(/ẻ/g,"3?")).replace(/Ẻ/g,"3?")).replace(/ể/g,"3?")).replace(/Ể/g,"3?")).replace(/ẽ/g,"3~")).replace(/Ẽ/g,"3~")).replace(/ễ/g,"3~")).replace(/Ễ/g,"3~")).replace(/ẹ/g,"3.")).replace(/Ẹ/g,"3.")).replace(/ệ/g,"3.")).replace(/Ệ/g,"3.")).replace(/a/g,"4")).replace(/ă/g,"4")).replace(/â/g,"4")).replace(/A/g,"4")).replace(/Ă/g,"4")).replace(/Â/g,"4")).replace(/á/g,"4'")).replace(/ắ/g,"4'")).replace(/ấ/g,"4'")).replace(/Á/g,"4'")).replace(/Ắ/g,"4'")).replace(/Ấ/g,"4'")).replace(/à/g,"4`")).replace(/ằ/g,"4`")).replace(/ầ/g,"4`")).replace(/À/g,"4`")).replace(/Ằ/g,"4`")).replace(/Ầ/g,"4`")).replace(/ạ/g,"4.")).replace(/ặ/g,"4.")).replace(/ậ/g,"4.")).replace(/Ạ/g,"4.")).replace(/Ậ/g,"4.")).replace(/Ặ/g,"4.")).replace(/ã/g,"4~")).replace(/ẵ/g,"4~")).replace(/ẫ/g,"4~")).replace(/Ã/g,"4~")).replace(/Ẫ/g,"4~")).replace(/Ẵ/g,"4~")).replace(/ả/g,"4?")).replace(/ẳ/g,"4?")).replace(/ẩ/g,"4?")).replace(/Ả/g,"4?")).replace(/Ẩ/g,"4?")).replace(/Ẳ/g,"4?")}
+</script></body></html>

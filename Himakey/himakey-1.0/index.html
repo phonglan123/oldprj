@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Himakey</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="./index.css">
+    <script src="./index.js"></script>
+</head>
+
+<body>
+    <button id="videoTitle" onclick='showHide("video", this, "<b style=color:red>Bấm vào đây để đóng video</b>", "Video hướng dẫn sử dụng")'>Video hướng dẫn sử dụng</button>
+    <iframe id="video" width="100%" height="280px" src="https://www.youtube.com/embed/fCjoMkz0JJM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: none"></iframe>
+    <br/>
+
+    <div id="controlButton">
+        <button id="addQuestion" onclick="showHide('inputForm', this, '<b style=color:red>Bấm vào để đóng khung</b>', 'Thêm câu hỏi')">Thêm câu hỏi</button>
+        <button id="review" onclick="review()">Ôn tập</button>
+        <button id="feedback" onclick="window.open('https://github.com/petavietnam/himakey/issues/new')">Góp ý, báo lỗi</button>
+        <button id="inputOutputData" onclick="showInputOutput()">Nhập/xuất dữ liệu</button>
+    </div>
+
+    <div id="inputOutputBox">
+        <div id="inputTitle"><b>Nhập dữ liệu</b></div>
+        <form id="inputTextarea" action="javascript:;" onsubmit="">
+            <textarea id="inputData" placeholder="Dán dữ liệu đã được sao chép vào đây..." required></textarea>
+            <button id="inputButton" name="submit" onclick="inputDataSave()">Nhập dữ liệu</button>
+        </form><br/>
+
+        <div id="outputBox">
+            <div id="outputTitle"><b>Xuất dữ liệu</b><br/></div>
+            <div id="outputTips">Sao chép toàn bộ nội dung dưới đây và dán sang thiết bị khác để nhập dữ liệu vào đó</div>
+            <textarea id="outputData" placeholder="Sao chép toàn bộ nội dung trong đây và dán sang thiết bị khác để nhập dữ liệu vào đó..." required></textarea><br/><br/>
+        </div>
+
+        <button id="inputOutputClose" onclick='document.getElementById("inputOutputBox").style.display = "none"; document.body.style.overflow = "auto"'>Đóng cửa sổ này</button>
+    </div>
+
+    <form id="inputForm" action="javascript:;" onsubmit="addQuestion();"> <input type="text" placeholder="Nhập câu hỏi..." id="inputQuestion" required/> <textarea id="inputContent" placeholder="Nhập câu trả lời..." required></textarea>
+        <div id="inputTips"> Lưu ý: <i>Đặt <b>từ khóa cần ghi nhớ</b> trong dấu ngoặc vuông "[]" để ẩn nó. Ví dụ: <b>Hello có nghĩa là [xin chào]</b>, khi đó, từ <b>"xin chào"</b> sẽ bị ẩn</i> </div> <select id="inputDifficult" required> <option value="" disabled selected>Chọn độ khó của câu này</option> <option value="easy">Dễ (1 tuần sau sẽ ôn lại)</option> <option value="medium">Trung bình (4 ngày sau sẽ ôn lại)</option> <option value="hard">Khó (1 ngày sau sẽ ôn lại)</option> </select>        <button name="submit" id="inputSave">Lưu</button> </form>
+
+    <div id="editBox"></div>
+
+    <div id="list">
+        <center style="margin: 4px"><b id="stat">Tổng cộng: 0 - Cần học: 0 - Đã học: 0</b></center>
+        <div id="questions"></div>
+    </div>
+
+    <div id="reviewBox">
+        <h2 id="reviewQuestion"></h2>
+        <button id="reviewButton" onclick='showHide("reviewContent", this, "<b>Bấm vào các dải màu xám để hiện thị từ khóa chính bị ẩn</b>", "<b>Bấm vào đây để xem đáp án</b>")'><b>Bấm vào đây để xem đáp án</b></button>
+        <p id="reviewContent"></p>
+        <div id="reviewControl"></div><br/>
+        <button id="reviewStop" onclick='document.getElementById("reviewBox").style.display = "none"; document.body.style.overflow = "auto";'>Tạm dừng ôn tập (Những gì bạn đã ôn vẫn sẽ được lưu)</button>
+    </div>
+</body>
+
+</html>

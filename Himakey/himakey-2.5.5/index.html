@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Himakey</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="250674481759-as1vlff8irndim1spnpp839bket4rdke.apps.googleusercontent.com">
+    <link rel="shortcut icon" href="./Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-firestore.js"></script>
+    <script src="./tinymce/tinymce.min.js"></script>
+    <script src="./fileSaver.js"></script>
+    <script src="./index.js"></script>
+    <script src="./language.js"></script>
+  </head>
+  <body>
+    <div id="top"></div>
+    <div id="controlButton">
+      <button id="addQuestion" onclick="addQuestion()">
+        <script>
+          document.write(getLanguage("AddQues"));
+        </script>
+      </button>
+      <button id="review" onclick="review()">
+        <script>
+          document.write(getLanguage("Review"));
+        </script>
+      </button>
+      <button id="search" onclick="showHide('searchBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Search'))">
+        <script>
+          document.write(getLanguage("Search"));
+        </script>
+      </button>
+      <div id="searchBox">
+        <select id="searchType" required="required" onchange="changeSearchType(this.value)">
+          <option value="" disabled="disabled">
+            <script>
+              document.write(getLanguage("SearchType"));
+            </script>
+          </option>
+          <option value="question" selected="selected">
+            <script>
+              document.write(getLanguage("SearchTitle"));
+            </script>
+          </option>
+          <option value="content">
+            <script>
+              document.write(getLanguage("SearchContent"));
+            </script>
+          </option>
+          <option value="tag">
+            <script>
+              document.write(getLanguage("SearchTag"));
+            </script>
+          </option>
+          <option value="color">
+            <script>
+              document.write(getLanguage("SearchColor"));
+            </script>
+          </option>
+        </select>
+        <input type="text" id="searchInput" required="required" onkeyup="searchProcessing()"/>
+        <select id="searchColor" onchange="searchProcessing()">
+          <option value="" disabled="disabled" selected="selected">
+            <script>
+              document.write(getLanguage("ColorChon"));
+            </script>
+          </option>
+          <option value="#ffffff">
+            <script>
+              document.write(getLanguage("White"));
+            </script>
+          </option>
+          <option value="#e8eaed">
+            <script>
+              document.write(getLanguage("Gray1"));
+            </script>
+          </option>
+          <option value="#d2d2d4">
+            <script>
+              document.write(getLanguage("Gray2"));
+            </script>
+          </option>
+          <option value="#f28b82">
+            <script>
+              document.write(getLanguage("Red"));
+            </script>
+          </option>
+          <option value="#fbbc04">
+            <script>
+              document.write(getLanguage("Orange"));
+            </script>
+          </option>
+          <option value="#fff475">
+            <script>
+              document.write(getLanguage("Yellow"));
+            </script>
+          </option>
+          <option value="#ccff90">
+            <script>
+              document.write(getLanguage("Green"));
+            </script>
+          </option>
+          <option value="#a7ffeb">
+            <script>
+              document.write(getLanguage("Blue"));
+            </script>
+          </option>
+          <option value="#aecbfa">
+            <script>
+              document.write(getLanguage("Indigo"));
+            </script>
+          </option>
+          <option value="#d7aefb">
+            <script>
+              document.write(getLanguage("Violet"));
+            </script>
+          </option>
+          <option value="#fdcfe8">
+            <script>
+              document.write(getLanguage("Pink"));
+            </script>
+          </option>
+          <option value="#e6c9a8">
+            <script>
+              document.write(getLanguage("Brown"));
+            </script>
+          </option>
+        </select>
+      </div>
+      <button id="action" onclick="showHide('actionBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Action'))">
+        <script>
+          document.write(getLanguage("Action"));
+        </script>
+      </button>
+      <div id="actionBox">
+        <button id="multipleDelete" onclick="deleteQuestion()">
+          <script>
+            document.write(getLanguage("MulDel"));
+          </script>
+        </button>
+        <button id="multipleTagging" onclick="changeTag()">
+          <script>
+            document.write(getLanguage("MulTag"));
+          </script>
+        </button>
+        <button id="multipleColor" onclick="showHide('colorPicker', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('MulColorMark'))">
+          <script>
+            document.write(getLanguage("MulColorMark"));
+          </script>
+        </button>
+        <div id="colorPicker">
+          <div class="colorPicker" style="background: #ffffff; margin-left: 0" onclick="changeColor('#ffffff')"></div>
+          <div class="colorPicker" style="background: #e8eaed" onclick="changeColor('#e8eaed')"></div>
+          <div class="colorPicker" style="background: #d2d2d4" onclick="changeColor('#d2d2d4')"></div>
+          <div class="colorPicker" style="background: #f28b82; margin-left: 0" onclick="changeColor('#f28b82')"></div>
+          <div class="colorPicker" style="background: #fbbc04" onclick="changeColor('#fbbc04')"></div>
+          <div class="colorPicker" style="background: #fff475" onclick="changeColor('#fff475')"></div>
+          <div class="colorPicker" style="background: #ccff90; margin-left: 0" onclick="changeColor('#ccff90')"></div>
+          <div class="colorPicker" style="background: #a7ffeb" onclick="changeColor('#a7ffeb')"></div>
+          <div class="colorPicker" style="background: #aecbfa" onclick="changeColor('#aecbfa')"></div>
+          <div class="colorPicker" style="background: #d7aefb; margin-left: 0" onclick="changeColor('#d7aefb')"></div>
+          <div class="colorPicker" style="background: #fdcfe8" onclick="changeColor('#fdcfe8')"></div>
+          <div class="colorPicker" style="background: #e6c9a8" onclick="changeColor('#e6c9a8')"></div>
+        </div>
+        <button id="selectAll" onclick="selectAll()">
+          <script>
+            document.write(getLanguage("SelectAll"));
+          </script>
+        </button>
+        <button id="unselectAll" onclick="writeList()">
+          <script>
+            document.write(getLanguage("UnselectAll"));
+          </script>
+        </button>
+      </div>
+      <button id="settingButton" onclick="writePointProgress(); showHide('settingBox', this, '<b style=color:red>' + getLanguage('CloseFrame') + '</b>', getLanguage('Setting'))">
+        <script>
+          document.write(getLanguage("Setting"));
+        </script>
+      </button>
+      <div id="settingBox">
+        <div id="himakeyPointBox">
+          <br/>
+          <div id="pointIcon"></div>
+          <div id="pointBarDisplay" style="text-align: center; margin-top: 8px"></div>
+          <br/>
+          <br/><hr id="pointHr" style="border: 1px solid #ccc"/><br/>
+          <div id="pointListDisplay"></div>
+          <div id="masterLevelCong"></div>
+        </div>
+        <select id="chooseLanguage" required="required" onchange="setLanguage(this.value)">
+          <option value="" disabled="disabled" selected="selected">
+            <script>
+              document.write(getLanguage("ChooseLang"));
+            </script>
+          </option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="en">English</option>
+        </select><br/>
+        <button id="inputOutputData" onclick='showHide("inputOutputBox", this, "<b style=color:red>" + getLanguage("CloseFrame") + "</b>", getLanguage("InOutData"))'>
+          <script>
+            document.write(getLanguage("InOutData"));
+          </script>
+        </button>
+        <div id="inputOutputBox">
+          <div id="inputTitle">
+            <b>
+              <script>
+                document.write(getLanguage("InData"));
+              </script>
+            </b>
+          </div>
+          <form id="inputTextarea" action="javascript:;" onsubmit="inputDataSave()">
+            <input type="file" id="inputFileUpload" required="required"/>
+            <button id="inputButton" name="submit">
+              <script>
+                document.write(getLanguage("InData"));
+              </script>
+            </button>
+          </form>
+          <h1 style="margin: 0; text-align: center">————</h1>
+          <div id="outputBox">
+            <div id="outputTitle">
+              <b>
+                <script>
+                  document.write(getLanguage("OutData"));
+                </script>
+              </b><br/></div>
+            <select id="outputType" required="required" onchange="downloadOutputFile()">
+              <option value="" disabled="disabled" selected="selected">
+                <script>
+                  document.write(getLanguage("ChooseFileType"));
+                </script>
+              </option>
+              <option value="txt">
+                <script>
+                  document.write(getLanguage("TxtFile"));
+                </script>
+              </option>
+              <option value="xlsx">
+                <script>
+                  document.write(getLanguage("ExcelFile"));
+                </script>
+              </option>
+            </select>
+          </div>
+        </div>
+        <button id="feedback" onclick="window.open('https://github.com/petavietnam/himakey/issues/new')">
+          <script>
+            document.write(getLanguage("Feedback"));
+          </script>
+        </button>
+        <button id="sourceCode" onclick='window.open("https://github.com/petavietnam/himakey#Support mathematical notation in editor")'>Github</button>
+      </div>
+    </div>
+    <div id="editBox">
+      <form id="editForm" action="javascript:;">
+        <input type="text" id="editTag"/>
+        <input type="text" id="editQuestion" required="required"/>
+        <textarea id="editContent"></textarea>
+        <div id="editTips">
+          <script>
+            document.write(getLanguage("NoteNgoacVuong"));
+          </script>
+        </div>
+        <select id="editDifficult" required="required">
+          <option value="" disabled="disabled" selected="selected">
+            <script>
+              document.write(getLanguage("Difficult"));
+            </script>
+          </option>
+          <option value="easy">
+            <script>
+              document.write(getLanguage("Easy"));
+            </script>
+          </option>
+          <option value="medium">
+            <script>
+              document.write(getLanguage("Medium"));
+            </script>
+          </option>
+          <option value="hard">
+            <script>
+              document.write(getLanguage("Hard"));
+            </script>
+          </option>
+        </select>
+        <button name="submit" id="editSave">
+          <script>
+            document.write(getLanguage("Save"));
+          </script>
+        </button>
+        <input type="reset" id="editCancel" onclick="hideDiv('editBox'); document.body.style.overflow = 'auto';"/>
+      </form>
+    </div>
+    <div id="list">
+      <center style="margin: 4px">
+        <b id="stat"></b>
+      </center>
+
+      <div id="questions"></div>
+    </div>
+    <div id="reviewBox">
+      <h2 id="reviewQuestion"></h2>
+      <button id="reviewButton" onclick='showHide("reviewContent", this, "<b>"+getLanguage("ShowKeyword")+"</b>", "<b>"+getLanguage("ShowDapAn")+"</b>")'>
+        <b>
+          <script>
+            document.write(getLanguage("ShowDapAn"));
+          </script>
+        </b>
+      </button>
+      <p id="reviewContent"></p>
+      <div id="reviewControl"></div><br/>
+      <button id="reviewStop" onclick='document.getElementById("reviewBox").style.display = "none"; document.body.style.overflow = "auto";'>
+        <script>
+          document.write(getLanguage("PauseReview"));
+        </script>
+      </button>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BetterEveryDay - Tốt hơn mỗi ngày</title>
+    <link rel="icon" href="logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mỗi ngày thực hiện một thử thách. Chỉ sau một tháng bạn sẽ thấy mình tốt hơn nhiều đấy. Thử đi. Tui xin bạn đó!">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="./BED.css">
+    <script>
+        var challengeList = [{
+            id: "1A",
+            title: "Hãy cười nhiều hơn",
+            description: "Nụ cười giúp bạn tạo ấn tượng tốt hơn, gần gũi, thân thiện hơn trong mắt mọi người xung quanh. Khoa học chứng minh rằng khi bạn tiếp xúc nhiều với những người hay cười thì bạn có nhiều năng lượng tích cực hơn. Ngược lại, khi bạn cười, bạn cũng sẽ truyền năng lượng tích cực cho người khác và cũng gây được thiện cảm với người đối diện",
+            status: "Uncomplete"
+        }, {
+            id: "1B",
+            title: "Đừng nói tục",
+            description: "Lời nói cho thấy điều diễn ra trong lòng bạn. Dùng những lời thô tục có thể cho thấy bạn là người vô tâm trước cảm xúc của người khác. Chửi tục có thể làm người khác nghĩ tiêu cực về bạn. Và chửi thề không giúp bạn “ngầu” như bạn nghĩ đâu.Đây là một thói quen rất rất xấu. Đừng cố biện minh cho thói quen này. Cho dù bạn đang bực, đang vui, đang gặp bạn hay người lạ cũng đừng chửi bậy. Đặc biệt là giới trẻ bây giờ. Cứ 1 câu thì có 1 từ nói bậy. Một tín hiệu đáng báo động. Chỉ một ngày thôi. Đừng nói bậy",
+            status: "Uncomplete"
+        }, {
+            id: "1C",
+            title: "Sống chậm lại",
+            description: "Muốn sống dài, hãy sống chậm. Sống chậm lại. Để ý xung quanh. Liệu bạn có biết hôm nay là ngày gì không? Hãy sống chậm lại để thấy được cuộc sống thật thú vị. Thay vì gửi tin nhắn qua Messenger hãy gửi thư tay đi. Việc đợi thư đi và thư đến sẽ rất thú vị. À còn sưu tầm tem nữa chứ. Thú vị biết bao. Hãy sống chậm lại",
+            status: "Uncomplete"
+        }, {
+            id: "1D",
+            title: "Quan tâm người khác",
+            description: "Hãy quan tâm đến người khác đi. Quan tâm đến sinh nhật họ. Họ thích gì? Họ muốn gì? Bạn liệu có biết. Ngay cả người thân của bạn chưa chắc bạn đã biết hết về họ. Hãy quan tâm họ.",
+            status: "Uncomplete"
+        }, {
+            id: "1E",
+            title: "Rời xa Internet",
+            description: "Chúng ta vùi đầu vào trong Facebook, Google, YouTube mà quên đi cuộc sống xung quanh. Một ngày thôi! Hãy dừng dùng Internet. Không chỉ rời xa Internet mà hãy rời xa thiết bị điện tử. Hãy thử đi đến một nơi nào đó yên bình mà tận hưởng. Không thì hãy đến thư viện đi. Chỉ tốn 10.000 VNĐ tiền vé thôi nhưng sẽ rất hữu ích khi bạn đọc sách đó!",
+            status: "Uncomplete"
+        }, {
+            id: "1F",
+            title: "Đọc sách",
+            description: "Không ai thành công mà không từng đọc sách cả. Bill Gates vẫn thường hay đọc sách lúc rảnh rỗi. Một người bận rộn như Bill Gates tại Microsoft - Một công ty đa quốc gia, quản lí rất nhiều dự án to - vẫn còn đọc sách thì tại sao chúng ta - những người không bận rộn mấy - lại không đọc sách? Hãy tạp thói quen đọc đi! Bạn sẽ không hối tiếc khi bỏ ra chỉ 100.000 VNĐ ra để mua quyển sách đâu. Thậm chí chỉ cần hơn 50.000 VNĐ thôi bạn có thể sở hữu hơn 30 bí quyết của Đắc Nhân Tâm - Cuốn sách vĩ đại nhất mọi thời đại.",
+            status: "Uncomplete"
+        }, {
+            id: "1G",
+            title: "Tạm biệt trò chơi điện tử",
+            description: "Chơi game không xấu nhưng nếu ta chơi game quá thì không chỉ xấu mà còn là hại. Hại mắt, hại người, hại tinh thần, hại sức khỏe,.... Giới trẻ ngày nay không chỉ chơi game thường mà còn là game đánh nhau, bắn súng. Rất rất độc hại. Hãy tự thành lập câu lạc bộ Goodbye Game cho mình. Câu lạc bộ này sẽ giúp bạn bỏ. Hãy lôi kéo mọi người vào Goodbye Game chứ đừng là Hello Game.",
+            status: "Uncomplete"
+        }, {
+            id: "1H",
+            title: "Nói lời xin lỗi và cảm ơn",
+            description: "Ta mắc lỗi thì hãy nói xin lỗi. Ngại chi? Ta có được điều này vì ai? Hãy cảm ơn người đó! Ngại chi? Nhưng nói lời xin lỗi thôi chưa đủ, hãy biết sửa lỗi. Nói lời cảm ơn thôi chưa đủ, hãy biết đền ơn.",
+            status: "Uncomplete"
+        }, {
+            id: "1I",
+            title: "Hãy giúp người khác",
+            description: "Tiếc gì vài phút để giúp người khác. Nó không làm bạn già đi nhưng sẽ giúp bạn giàu hơn - giàu tình thường hơn. Giúp người khác cũng chính là giúp mình. Hãy thử một ngày xem, chỉ cần một người thôi. Chỉ một người thôi.",
+            status: "Uncomplete"
+        }, {
+            id: "1K",
+            title: "Chiến thắng bản thân",
+            description: "Không chiến thắng nào vẻ vang hơn chiến thắng bản thân. Nếu giờ bạn chiến thắng tất cả mọi người trên Trái Đất này thì mục tiêu tiếp theo của bạn là gì? Là chính bạn. Chiến thắng bạn là chiến thắng vẻ vang nhất, dễ dàng nhất. Tại sao ta lại phải ganh đua với người khác thay vì phát triển mình?",
+            status: "Uncomplete"
+        }, {
+            id: "1L",
+            title: "Biết mình là ai",
+            description: "Sống ở đời phải biết mình là ai.<br>- Đừng vì <b>sĩ diện</b> mà làm khổ cha mẹ<br>- Đừng vì <b>tiền bạc</b> mà bán rẻ lương tâm<br>- Đừng vì <b>hư danh</b> mà khinh mạt người đời<br>- Đừng vì nghĩ mình <b>khôn ngoan</b> mà lừa lọc dối trá<br>- Đừng vì nghĩ mình <b>tài giỏi</b> mà kiêu ngạo, biếng lười<br>Sống có khúc, người có lúc. Gieo thiện báo thiện, gieo ác gặp ác! Nhớ lấy mà sống!",
+            status: "Uncomplete"
+        }, {
+            id: "1M",
+            title: "Nói ít thôi, hãy làm đi",
+            description: "Thời nguyên thủy, bạn nhiều tuổi thì bạn hơn người khác. Thời phong kiến, bạn nhiều quyền thì bạn hơn người khác. Thời cận đại bạn nhiều tiền thì bạn hơn người khác. Thời hiện đại, bạn nhiều thành quả thì bạn hơn người khác. Bạn biết nhiều, nói nhiều, hiểu nhiều nhưng chả làm được gì thì cũng vứt đi tất cả. Đọc sách phải biết áp dụng, học phải biết hành, nói là phải làm. Đừng để mình gia nhập 'khối' NATO - No Action Talk Only (Tạm dịch là Không làm, chỉ nói)",
+            status: "Uncomplete"
+        }, {
+            id: "1N",
+            title: "Đừng ghen ăn tức ở",
+            description: "GATO hay Ghen ăn tức ở là một thói quen rất xấu. Ta nhìn thấy người ta giỏi, người ta thành công từ đó sinh ra sự đố kỵ, ganh ghét. Ta chỉ trực chờ lỗi của họ để 'bốc phốt' họ, hạ uy tín của họ. Đây là một thói quen xấu. Bạn sẽ không thể thành công nếu không biết học hỏi những người thành công!",
+            status: "Uncomplete"
+        }, {
+            id: "1O",
+            title: "Không chỉ trích người khác",
+            description: "Trong xã hội, cần lắm sự tự do để mọi người có thể nói lên quan điểm của mình và người ta cũng thường kêu đòi sự tự do như vậy. Ấy thế mà khi có ý kiến nào đó bất đồng quan điểm, lập tức có người phản ứng theo kiểu 'ném đá', sỉ nhục, chửi phủ đầu... Thậm chí có rất nhiều người chưa tìm hiểu kỹ vấn đề, đôi khi chỉ cần đọc cái tựa hay nhìn cái hình thấy chướng mắt hoặc thấy nhiều người phản ứng là tham gia vào 'ném đá', 'chửi' ngay. Ai cũng có quyền phản bác nếu không đồng ý một ý kiến, sáng kiến hay quan điểm trái với mình. Nhưng phản bác, tranh luận phải đi kèm với lý lẽ và sự tôn trọng lẫn nhau bởi cái ta nghĩ chưa chắc gì đúng hơn cái của người khác nghĩ. Trước một sự vật hiện tượng sẽ có nhiều suy nghĩ, ý kiến khác nhau được đưa ra và cái nào phù hợp với thực tiễn cuộc sống thì tự nhiên sẽ được chấp nhận. Ngày nay, con người được tiếp cận nhiều thông tin. Đó là thuận lợi mà cũng là khó khăn, vì trong rất nhiều thông tin đó đòi hỏi người ta phải biết đối chiếu, kiểm chứng, lựa chọn để có thể hiểu đúng vấn đề. Sau khi hiểu đúng rồi thì mới có thể phản ứng và khi đó lại là câu chuyện chọn cách phản ứng như thế nào cho phù hợp và hiệu quả nhất.",
+            status: "Uncomplete"
+        }, {
+            id: "1P",
+            title: "Nói điều mình biết",
+            description: "Bạn không biết điều gì thì đừng nói. Hãy nhận là mình không biết. Không nên 'chém gió'! Người đối diện của bạn có thể rất giỏi và họ có thể phát hiện bạn đang nói dối, bạn đang 'chém gió'. Họ có thể nghĩ xấu về bạn. Bạn càng nói những điều mình không biết sẽ khiến cho người khác khinh thường bạn và cũng khiến cho bạn nghĩ mình biết nhiều, hiểu nhiều. Không tốt đâu! Hãy bỏ thói quen đó đi!",
+            status: "Uncomplete"
+        }, {
+            id: "1Q",
+            title: "Biết lên kế hoạch",
+            description: "Vào buổi tối mỗi ngày, hãy dành ra 10 phút, chỉ 10 phút thôi để lên kế hoạch cho ngày mai. Viết ra giấy những việc bạn cần làm vào ngày mai, đừng tham chỉ 3-5 việc thôi. Thói quen này sẽ giúp bạn biết mai bạn làm gì và bạn sẽ không bị bệnh 'chả biết đi đâu, làm gì' vào ngày mai. Nhưng nhớ nhé, bạn viết được thì phải làm được",
+            status: "Uncomplete"
+        }, {
+            id: "1R",
+            title: "Đừng để mai rồi làm",
+            description: "Việc nay ư? Mai làm - Đừng nói như thế. Thứ 2, thứ 3, thứ 4, thứ 5, thứ 6, thứ 7, chủ nhật. Làm gì có thứ nào là thứ mai? Hãy làm việc của hôm nay, mai còn việc của mai. Bạn cứ trì hoãn thì chả bao giờ làm được cả. Hãy bỏ điện thoại xuống, gấp chăn lại và đi làm việc thôi!",
+            status: "Uncomplete"
+        }, {
+            id: "1S",
+            title: "Biết tiết kiệm",
+            description: "Tích tiểu thành đại. Tiết kiệm 1 đồng, 2 đồng tuy nhỏ nhưng dần dần rồi sẽ thành 1 triệu, 2 triệu. Không chỉ tiết kiệm tiền, ta hãy tiết kiệm mọi thứ. Dùng đừng hoang phí. Tiết kiệm tiền, tiết kiệm xăng, tiết kiệm ga, tiết kiệm thời gian,.... Nhưng hãy nhớ, tiết kiệm chứ đừng bủn sỉn, keo kiệt!",
+            status: "Uncomplete"
+        }, {
+            id: "1T",
+            title: "Hãy sửa lỗi",
+            description: "Có lỗi mới là con người nhưng biết sửa lỗi thì ta là thánh nhân. Biết lỗi thôi chưa đủ, phải biết sửa nó. Đừng sợ mắc lỗi, không ai là không mắc lỗi cả. Ai cũng mắc lỗi vì vậy đừng ngại khi nhận lỗi và sửa lỗi. Không ai là hoàn hảo cả bởi vậy bút chì mới cần có cục gôm",
+            status: "Uncomplete"
+        }, {
+            id: "1U",
+            title: "Vẻ ngoài không phải tất cả",
+            description: "Đừng nhìn vẻ ngoài xấu xí mà nghĩ tâm cũng xấu theo. Đừng nhìn vẻ ngoài đẹp đẽ mà nghĩ tâm cũng đẹp thế. Đừng nhìn mặt mà bắt hình dong. ",
+            status: "Uncomplete"
+        }, {
+            id: "1V",
+            title: "Hãy bảo vệ Trái Đất",
+            description: "Bảo vệ thiên nhiên chính là bảo vệ ngôi nhà, bảo vệ cha mẹ và dòng tộc của chúng ta. Con người là loài duy nhất có khả năng tiêu diệt Trái Đất, vì vậy nếu chúng ta có khả năng tiêu diệt Trái Đất, thì chúng ta cũng có khả năng để bảo vệ nó. Những cánh rừng khỏe mạnh sẽ làm sạch không khí và cung cấp oxy cho các sinh vật, làm hài hoà các yếu tố và làm tăng tuổi thọ. Cây ăn quả cung cấp sự sống và là nguồn dinh dưỡng sức khỏe chủ yếu cho con người, cũng như có lợi ích cho các loài hữu tình khác. Trái Đất cho ta nhiều thế nhưng ta đã đối xử với hành tinh này thế nào? Chắc bạn cũng biết rồi đó. Hãy chung tay bảo vệ Trái Đất. 8h30 đến 9h30 ngày thứ 7 cuối cùng của tháng 3 hãy tắt điện để hưởng ứng Giờ Trái Đất. Ngày 22/4 hàng năm hãy đi nhặt rác, đừng vứt rác bừa bãi để hưởng ứng Ngày Trái Đất",
+            status: "Uncomplete"
+        }, {
+            id: "1W",
+            title: "Tự giúp mình",
+            description: "Không ai có thể giúp bạn ngoài chính mình. Đừng chờ người khác đem cơm đến cho mình, đem thành công, tiền tài đến cho mình. Hãy đứng lên và làm bằng chính đôi tay của bạn. Thời gian chờ đợi thì có lẽ bạn đã có thể kiếm gấp bội.",
+            status: "Uncomplete"
+        }, {
+            id: "1X",
+            title: "1 ngày nghỉ ngơi",
+            description: "Có lẽ bạn cũng đã có một tuần làm việc vất vả rồi. Hãy dành một nghỉ chủ nhật để nghỉ ngơi thư giãn. Chỉ một ngày thôi. Hãy để cơ thể được nghỉ ngơi. Bạn sẽ thấy mình có nhiều năng lượng hơn sau 1 ngày nghỉ ngơi, vui chơi, thư giãn đó! Ngoài ra, hãy dành thời gian cho gia đình mình. Nên cân bằng giữa công việc và gia đình!",
+            status: "Uncomplete"
+        }, {
+            id: "1Y",
+            title: "Làm việc nghiêm túc",
+            description: "Tắt điện thoại, chặn Facebook và cùng ngồi vào bàn làm việc thôi. Hãy tập trung vào công việc. Chỉ 25 phút thôi bạn à. Hãy tập trung hoàn toàn vào công việc trong 25 phút. Sau 25 phút thì hãy dành 5 phút để nghỉ ngơi nhé. Bạn có thể bật nhạc nhẹ nhàng lên nghe trong 5 phút nghỉ ngơi này. Như vậy là bạn đã có được 30 phút tuần hoàn rùi đó. Cứ 25 phút là làm và 5 phút là nghỉ. Sau 4 tiếng thì bạn nên đóng máy lại và ra ngoài chơi.",
+            status: "Uncomplete"
+        }, {
+            id: "1Z",
+            title: "Tổng kết lại một ngày",
+            description: "Sau mỗi ngày làm việc bạn hãy dành thời gian để tổng kết lại ngay. Xem hôm nay bạn làm được bao nhiêu, hiệu quả hay không, vui hay không, có kinh nghiệm mới hay không và bạn sẽ làm gì trong ngày mai. Mỗi ngày bạn chỉ cần tổng kết lại và bạn sẽ có những kinh nghiệm cho ngày làm việc tiếp theo. Hãy thử nhé!",
+            status: "Uncomplete"
+        }, {
+            id: "2A",
+            title: "Mang theo một quyển sổ",
+            description: "Hãy tập thói quen mang theo một quyển sổ tay nho nhỏ để ghi lại những ý tưởng, những điều xuất hiện trong đầu bạn trong khi đi trên đường. Đôi khi nó còn là những điều bất ngờ bạn cần ghi chép thì việc này sẽ cứu nguy cho bạn",
+            status: "Uncomplete"
+        }, {
+            id: "2B",
+            title: "Ăn uống lành mạnh",
+            description: "Đừng để công việc ảnh hưởng đến sức khỏe của bạn. Hãy ăn uống lành mạnh, đầy đủ. 3 bữa: sáng - trưa - tối và ăn đủ rau - cơm - cá - thịt. Ngoài việc ăn uống thì bạn nên vận động ngoài trời. Hãy dành 8 tiếng mỗi ngày để làm việc. Còn lại là để cho gia đình, chăm sóc bản thân, nâng cao chất lượng cuộc sống, học tập.",
+            status: "Uncomplete"
+        }, {
+            id: "2C",
+            title: "Ngủ đúng giờ",
+            description: "Đừng để công việc ảnh hưởng đến sức khỏe của bạn. Hãy ngủ đúng giờ, dậy đúng giờ. Lên giường lúc 10h và bạn sẽ ngủ được trước 11h. Như vậy là bạn có thể dậy trong khoảng từ 6h đến 8h. Hãy thử ngủ sớm, dậy sớm một ngày nhé. Việc này sẽ giúp bạn có năng lượng hơn cho công việc. Khoa học cũng chứng minh, khi dậy sớm con người ta thường có rất nhiều ý tưởng độc đáo trong công việc",
+            status: "Uncomplete"
+        }, {
+            id: "2D",
+            title: "Không thuốc lá, rượu bia",
+            description: "Đừng hút thuốc lá, nó sẽ ảnh hướng đến sức khỏe của bạn. Ngoài ra, con bạn, vợ bạn, chồng bạn, cha mẹ bạn khi hít phải thuốc lá cũng sẽ bị ảnh hưởng đến sức khỏe. Còn rượu bia thì khi bạn uống nó, ra ngoài đường bạn có thể bị công an 'tuýt' còi. Nhưng quan trọng hơn là lâu dài sẽ bị ảnh hưởng đến gan, thận. Hãy bỏ thuôc lá, rượu bia khi còn có thể!",
+            status: "Uncomplete"
+        }, {
+            id: "2E",
+            title: "Tập thể dục mỗi ngày",
+            description: "Mỗi sáng hay tập vài bài thể dục đơn giản. 5 phút thôi nhưng nó rất tốt đấy. Nếu không bạn có thể đeo giày vào và chạy bộ ở công viên. Cũng chỉ 15 phút thôi nhưng cũng sẽ rất tốt cho bạn đấy. Bạn có thể nghe một bản nhạc khi chạy cũng được.",
+            status: "Uncomplete"
+        }, {
+            id: "2F",
+            title: "Hãy nói thật",
+            description: "Hãy nói thật cho dù nó là lời nói thế nào đi nữa. Nói thật nhưng cách bạn nói sẽ khiến cho người khác không buồn lòng nếu đó là một lời chê. Và hãy cùng ngăn chặn vấn nạn 'Thẳng thắn thật thà thường thua thiệt. Lọc lừa lươn lẹo lại leo lên' nhé!",
+            status: "Uncomplete"
+        }, {
+            id: "2G",
+            title: "Tiết kiệm thời gian",
+            description: "Hãy dùng thời gian thật hợp lí. Biết cách lên kế hoạch theo thời gian cũng là một cách. Hãy cài đặt ứng dụng giới hạn thời gian dùng điện thoại để bạn không dùng điện thoại quá lâu. Thời gian là vàng là bạc. Mất tiền còn lấy lại được nhưng mất thời gian thì vĩnh viễn là mất. Không gì có thể lấy lại được!",
+            status: "Uncomplete"
+        }];
+        var challengeListLocalStorage = JSON.parse(localStorage.getItem("challengeList"));
+        if (challengeListLocalStorage != null) {
+            challengeList = challengeListLocalStorage;
+        }
+
+        function arrayShuffle(array) {
+            var currentIndex = array.length,
+                temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+
+        function writeChallenge() {
+            var challengeArea = document.getElementById("challengeArea");
+            challengeList.forEach(function(challenge) {
+                challengeArea.innerHTML += '<div class="challengeBox" id="' + challenge.id + '"><button onclick="challengeComplete(' + "'" + challenge.id + "'" + ')">Hoàn thành</button><br><b id="challengeTitle" style="font-size: 20px">' + challenge.title + '</b><p id="challengeDescription"><img src="./image/' + challenge.id + '.png"/><br/>' + challenge.description + '</p></div>';
+                if (challenge.status == "Complete") {
+                    challengeComplete(challenge.id);
+                }
+            });
+        }
+
+        function updateChallengeAmount() {
+            var challengeAmount = document.getElementsByClassName("challengeBox").length;
+            var challengeCompleteAmount = document.getElementsByClassName("backgroundYellow").length;
+            if (challengeAmount == challengeCompleteAmount) {
+                document.getElementById("challengeAmount").innerHTML = "Chúc mừng bạn. Bạn đã hoàn thành toàn bộ! <b onclick='resetChallenge()' style='cursor: pointer'>Bấm vào đây để làm lại từ đầu</b>";
+            } else {
+                document.getElementById("challengeAmount").innerHTML = challengeCompleteAmount + " trên tổng số " + challengeAmount;
+            }
+        }
+
+        function resetChallenge() {
+            challengeList.forEach(function(challenge) {
+                challengeComplete(challenge.id);
+            });
+        }
+
+        function challengeComplete(id) {
+            var box = document.getElementById(id);
+            var button = box.getElementsByTagName("button")[0];
+            if (button.innerHTML == "Hoàn thành") {
+                button.innerHTML = "Chưa xong";
+                box.classList.add("backgroundYellow");
+                challengeList.forEach(function(challenge) {
+                    if (challenge.id == id) {
+                        challenge.status = "Complete";
+                    }
+                });
+            } else {
+                button.innerHTML = "Hoàn thành";
+                box.classList.remove("backgroundYellow");
+                challengeList.forEach(function(challenge) {
+                    if (challenge.id == id) {
+                        challenge.status = "Uncomplete";
+                    }
+                });
+            }
+            localStorage.setItem("challengeList", JSON.stringify(challengeList));
+            updateChallengeAmount();
+        }
+        arrayShuffle(challengeList);
+        setTimeout(writeChallenge, 1);
+        setTimeout(updateChallengeAmount, 1);
+
+    </script>
+</head>
+
+<body>
+    <h1>BetterEveryDay - Tốt hơn mỗi ngày</h1>
+    <div class="userManual" style="text-align: justify;"> <b>Số lượng thử thách bạn hoàn thành: </b>
+        <label id="challengeAmount"></label>
+        <br> <b>Bạn cần gì dưới đây?</b>
+        <ul>
+            <li><a href="./README.md" target="_blank">Đọc file
+                    README.md</a></li>
+            <li><a href="https://github.com/petavietnam/FunWithMe/issues/new?title=BetterEverDay%20-%20%3Cyour_title_here%3E" target="_blank">Báo lỗi</a></li>
+            <li><a href="https://github.com/petavietnam/FunWithMe/tree/master/BetterEveryDay" target="_blank">Xem mã nguồn</a></li>
+        </ul> Mỗi ngày bạn hãy thử thực hiện một thử thách mà chúng tôi đưa ra. Hãy đọc và làm theo từng thử thách. Khi xong hãy bấm nút "Hoàn thành" bên cạnh. Nếu nhỡ bấm nhầm thì bạn có thể bấm "Chưa xong". Các mục hoàn thành thì sẽ được đánh dấu <span style="background: yellow; border-radius: 4px; padding: 1px">màu vàng</span>. Bạn sẽ thấy mình tốt hơn nhiều sau 1 tháng đó. <b>Chúc bạn thành công và may mắn! [^-^]</b>
+    </div>
+    <br>
+    <div id="challengeArea"></div>
+    <br />
+    <br />
+</body>
+
+</html>

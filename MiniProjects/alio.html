@@ -1,0 +1,236 @@
+<!-- 
+
+ĐỂ CHẠY ĐC CÁI NÀY THÌ CẦN CHO NÓ VÀO FOLDER ADSFRAME RỒI CHẠY TƯƠNG ĐƯƠNG VỚI FILE INDEX.HTML
+DỰ ÁN RẤT THÀNH CÔNG (TUY VẪN CÓ NHIỀU LỖI NHƯNG LÀM ĐC GIỐNG NHƯ MANY.LINK Ý, LÀ KHÁ ỔN RỒI)
+CẢM GIÁC VẪN VUI LẮM! DÙ PHẢI CHIA TAY DỰ ÁN :D
+
+-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<div style="text-align: center; padding: 16px;">
+    <img id="alioImg" style="box-shadow: 0 0 10px 0 grey; border: 1px solid #ccc; border-radius: 50%; width: 100px; height: 100px; position: relative;" />
+    <h2 id="alioTitle" style="margin-bottom: 8px"></h2>
+    <i id="alioDesc"></i> <br /><br />
+    <div id="alioLinks" style="text-align: left"></div>
+</div>
+<center>
+    <div class="alioCopyright">
+        <h3 style="text-align: center; cursor: pointer; margin-bottom: 0" onclick="document.getElementById('intro').style.display='block'; this.innerHTML='Cách để tạo một trang ALIO như này'.toUpperCase(); this.style.cursor='default';">Bạn muốn tạo một trang ALIO như này? Bấm vào đây!</h3>
+        <div style="text-align: justify; display: none;" id="intro">
+            <br />
+        </div>
+    </div>
+</center>
+
+<div id="adsFrame"></div>
+<script src="./embed.js" frameStyle="width: 100%; height: 100%; display: none; border: none;" embedElmID="adsFrame"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    //READ GG SHEET
+    var GoogleSpreadsheet, GoogleUrl;
+    GoogleUrl = (function() {
+        function GoogleUrl(sourceIdentifier) {
+            this.sourceIdentifier = sourceIdentifier;
+            if (this.sourceIdentifier.match(/http(s)*:/)) {
+                this.url = this.sourceIdentifier;
+                try {
+                    this.key = this.url.match(/key=(.*?)&/)[1];
+                } catch (error) {
+                    this.key = this.url.match(/(cells|list)\/(.*?)\//)[2];
+                }
+            } else {
+                this.key = this.sourceIdentifier;
+            }
+            this.jsonCellsUrl = "http://spreadsheets.google.com/feeds/cells/" + this.key + "/od6/public/basic?alt=json-in-script";
+            this.jsonListUrl = "http://spreadsheets.google.com/feeds/list/" + this.key + "/od6/public/basic?alt=json-in-script";
+            this.jsonUrl = this.jsonCellsUrl;
+        }
+        return GoogleUrl;
+    })();
+    GoogleSpreadsheet = (function() {
+        function GoogleSpreadsheet() {}
+        GoogleSpreadsheet.prototype.load = function(callback) {
+            var intervalId, jsonUrl, safetyCounter, url, waitUntilLoaded;
+            url = this.googleUrl.jsonCellsUrl + "&callback=GoogleSpreadsheet.callbackCells";
+            $('body').append("<script src='" + url + "'/>");
+            jsonUrl = this.jsonUrl;
+            safetyCounter = 0;
+            waitUntilLoaded = function() {
+                var result;
+                result = GoogleSpreadsheet.find({
+                    jsonUrl: jsonUrl
+                });
+                if (safetyCounter++ > 20 || ((result != null) && (result.data != null))) {
+                    clearInterval(intervalId);
+                    return callback(result);
+                }
+            };
+            intervalId = setInterval(waitUntilLoaded, 200);
+            if (typeof result != "undefined" && result !== null) {
+                return result;
+            }
+        };
+        GoogleSpreadsheet.prototype.url = function(url) {
+            return this.googleUrl(new GoogleUrl(url));
+        };
+        GoogleSpreadsheet.prototype.googleUrl = function(googleUrl) {
+            if (typeof googleUrl === "string") {
+                throw "Invalid url, expecting object not string";
+            }
+            this.url = googleUrl.url;
+            this.key = googleUrl.key;
+            this.jsonUrl = googleUrl.jsonUrl;
+            return this.googleUrl = googleUrl;
+        };
+        GoogleSpreadsheet.prototype.save = function() {
+            return localStorage["GoogleSpreadsheet." + this.type] = JSON.stringify(this);
+        };
+        return GoogleSpreadsheet;
+    })();
+    GoogleSpreadsheet.bless = function(object) {
+        var key, result, value;
+        result = new GoogleSpreadsheet();
+        for (key in object) {
+            value = object[key];
+            result[key] = value;
+        }
+        return result;
+    };
+    GoogleSpreadsheet.find = function(params) {
+        var item, itemObject, key, value, _i, _len;
+        try {
+            for (item in localStorage) {
+                if (item.match(/^GoogleSpreadsheet\./)) {
+                    itemObject = JSON.parse(localStorage[item]);
+                    for (key in params) {
+                        value = params[key];
+                        if (itemObject[key] === value) {
+                            return GoogleSpreadsheet.bless(itemObject);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            for (_i = 0, _len = localStorage.length; _i < _len; _i++) {
+                item = localStorage[_i];
+                if (item.match(/^GoogleSpreadsheet\./)) {
+                    itemObject = JSON.parse(localStorage[item]);
+                    for (key in params) {
+                        value = params[key];
+                        if (itemObject[key] === value) {
+                            return GoogleSpreadsheet.bless(itemObject);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    };
+    GoogleSpreadsheet.callbackCells = function(data) {
+        var cell, googleSpreadsheet, googleUrl;
+        googleUrl = new GoogleUrl(data.feed.id.$t);
+        googleSpreadsheet = GoogleSpreadsheet.find({
+            jsonUrl: googleUrl.jsonUrl
+        });
+        if (googleSpreadsheet === null) {
+            googleSpreadsheet = new GoogleSpreadsheet();
+            googleSpreadsheet.googleUrl(googleUrl);
+        }
+        googleSpreadsheet.data = (function() {
+            var _i, _len, _ref, _results;
+            _ref = data.feed.entry;
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                cell = _ref[_i];
+                _results.push(cell.content.$t);
+            }
+            return _results;
+        })();
+        googleSpreadsheet.save();
+        return googleSpreadsheet;
+    };
+
+    function fomartAlioSheet(sheetID, database) {
+        var readGGSheetjs = new GoogleSpreadsheet();
+        readGGSheetjs.url('https://spreadsheets.google.com/pub?key=' + sheetID + '&hl=en&output=html');
+        readGGSheetjs.load(result => {
+            for (var i = 2; i <= (result.data.length / 5 - 1); i++)
+                database.links.push({
+                    title: result.data[i * 5 + 4],
+                    description: result.data[i * 5 + 5],
+                    url: result.data[i * 5 + 6],
+                    icon: result.data[i * 5 + 7],
+                    color: result.data[i * 5 + 8]
+                });
+            database.topImg = result.data[2];
+            database.topBg = result.data[4];
+            database.topTitle = result.data[6];
+            database.topDescription = result.data[8];
+        });
+    }
+
+</script>
+<script>
+    var data = {
+        topImg: '',
+        topBg: '',
+        topTitle: '',
+        topDescription: '',
+        links: []
+    };
+    fomartAlioSheet(new URL(window.location.href).searchParams.get('id'), data);
+    setTimeout(() => {
+        document.getElementById("alioImg").src = data.topImg;
+        document.body.style.backgroundImage = "url('" + data.topImg + "')";
+        document.getElementById("alioTitle").innerText = data.topTitle;
+        document.title = data.topTitle;
+        document.getElementById("alioDesc").innerText = data.topDescription;
+        for (var i = 0; i < data.links.length; i++)
+            document.getElementById("alioLinks").innerHTML += '<div class="alioLink" style="background-color: ' + data.links[i].color + ';" onclick="window.open(' + "'" + data.links[i].url + "'" + ')"> <img class="alioImg" src="' + data.links[i].icon + '" /> <div class="alioTitle"><b>' + data.links[i].title + '</b></div> <div class="alioDesc"><i>' + data.links[i].description + '</i></div> </div>';
+    }, 200);
+
+</script>
+
+<style>
+    .alioLink {
+        height: 50px;
+        border: 1px solid grey;
+        padding: 8px;
+        cursor: pointer;
+        border-radius: 50px;
+        margin-top: 40px;
+        box-shadow: 0 0 10px 0 grey;
+        user-select: none;
+    }
+
+    .alioImg {
+        height: 75px;
+        position: relative;
+        top: -16px;
+        left: -16px;
+        border: 1px solid grey;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 0 10px 0 grey;
+    }
+
+    .alioTitle,
+    .alioDesc {
+        position: relative;
+        top: -70;
+        left: 75;
+        width: calc(100% - 90px);
+    }
+
+    .alioCopyright {
+        box-shadow: 0 0 8px 0 #ccc;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin: 16px;
+        padding: 16px;
+        width: 500;
+        padding-top: 0;
+    }
+
+</style>

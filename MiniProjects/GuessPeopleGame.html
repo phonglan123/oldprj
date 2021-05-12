@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./Logo.png" type="image/x-icon">
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #box {
+            width: 100%;
+            overflow: auto;
+            box-shadow: 0 0 8px 0 #ccc;
+            max-height: 350px;
+        }
+
+        #database {
+            width: 100%;
+            border-collapse: collapse;
+            margin-right: 4px;
+        }
+
+        #database td {
+            text-align: center;
+        }
+
+        #database td:empty:before {
+            content: "...";
+            pointer-events: none;
+            display: block;
+            /* For Firefox */
+        }
+
+        #sug,
+        #yourAns {
+            box-shadow: 0 0 8px 0 #ccc;
+            width: 250px;
+            border-collapse: collapse;
+            margin-right: 4px;
+            width: 100%;
+            max-height: 100px;
+            overflow: auto;
+        }
+
+        #sug td,
+        #yourAns td {
+            text-align: center;
+        }
+
+        #hidePart,
+        #playAgainButton {
+            display: none;
+        }
+
+        #leftPart {
+            float: left;
+            width: 49%;
+        }
+
+        #rightPart {
+            float: right;
+            width: 49%;
+        }
+
+        table th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #fff;
+            box-shadow: 0 0 16px 0 #ccc;
+        }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/table-to-json@1.0.0/lib/jquery.tabletojson.min.js"></script>
+    <script src="./GuessPeopleGameProcess.js"></script>
+</head>
+
+<body>
+    <h1 style="text-align: center">Dữ liệu</h1>
+    <div id="box">
+        <table border="1px" id="database">
+            <tbody>
+                <tr>
+                    <th>Họ</th>
+                    <th>Đệm</th>
+                    <th>T&ecirc;n</th>
+                    <th>Giới tính</th>
+                    <th>Biệt danh</th>
+                    <th>Ng&agrave;y sinh</th>
+                    <th>Th&aacute;ng sinh</th>
+                    <th>Năm sinh</th>
+                    <th>Trường học</th>
+                    <th>Th&agrave;nh phố</th>
+                    <th>Quốc gia</th>
+                    <th>C&ocirc;ng việc</th>
+                    <th>Sở th&iacute;ch</th>
+                    <th>Vợ hoặc chồng</th>
+                    <th>Mạng x&atilde; hội</th>
+                    <th>Nổi tiếng vì</th>
+                </tr>
+                <tr>
+                    <td contenteditable="true">Nguyễn</td>
+                    <td contenteditable="true">Văn</td>
+                    <td contenteditable="true">A</td>
+                    <td contenteditable="true">Nam</td>
+                    <td contenteditable="true">A-VN</td>
+                    <td contenteditable="true">01</td>
+                    <td contenteditable="true">01</td>
+                    <td contenteditable="true">2000</td>
+                    <td contenteditable="true">Trường Đại học Học đại</td>
+                    <td contenteditable="true">Thái Nguyên</td>
+                    <td contenteditable="true">Việt Nam</td>
+                    <td contenteditable="true">Chém gió</td>
+                    <td contenteditable="true">Chém gió, nói phét</td>
+                    <td contenteditable="true"></td>
+                    <td contenteditable="true">Fakebook</td>
+                    <td contenteditable="true"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <center>
+        <button onclick="addRow()">Thêm người</button> <button onclick="deleteRow()">Xóa người</button> <button onclick="start()" id="startButton">Bắt đầu</button> <button onclick="playAgain()" id="playAgainButton">Chơi lại</button> <button onclick='$("#database tr").slice(1).remove(); localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));'>Xóa dữ liệu</button> <button onclick='localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));'>Lưu dữ liệu</button><br /><br />
+        <b>Bấm vào ô bất kỳ để sửa nội dung ở đó...</b> <br />
+        <i>Nếu một thông tin có nhiều ý thì tách nhau bằng dấu phẩy - VD: Sở thích: đọc sách, lập trình,...</i>
+    </center>
+    <div id="hidePart">
+        <br />
+        <hr />
+        <div id="leftPart">
+            <h1 style="text-align: center">Gợi ý</h1>
+            <table id="sug" border="1">
+                <tr>
+                    <th>STT</th>
+                    <th>Gợi ý <button onclick="moreSug()" id="moreSugButton">Hiển thị thêm gợi ý</button></th>
+                </tr>
+            </table>
+        </div>
+        <div id="rightPart">
+            <h1 style="text-align: center">Đáp án</h1>
+            <table id="yourAns" border="1">
+                <tr>
+                    <th>Họ tên</th>
+                    <th>Số bạn đoán</th>
+                    <th>Đáp án <button onclick="showAns()" id="showAnsButton">Hiển thị đáp án</button></th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        var suggestionFunc,
+            databaseInStorage = localStorage.getItem("database");
+        if (databaseInStorage != null)
+            jsonToTable(databaseInStorage, "database");
+
+        function playAgain() {
+            $("#sug tr").slice(1).remove();
+            $("#yourAns tr").slice(1).remove();
+            document.getElementById("startButton").style.display = "inline-block";
+            document.getElementById("playAgainButton").style.display = "none";
+            document.getElementById("moreSugButton").style.display = "inline-block";
+            document.getElementById("showAnsButton").style.display = "inline-block";
+            document.getElementById("hidePart").style.display = "none";
+            localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+
+        }
+
+        function moreSug() {
+            var tableRef = document.getElementById('sug').getElementsByTagName('tbody')[0];
+            newRow = tableRef.insertRow();
+            var newCell1 = newRow.insertCell(0),
+                newCell2 = newRow.insertCell(1),
+                index = $("#sug tr").length - 1;
+            if (index < suggestionFunc.suggestions.length) {
+                newCell1.innerHTML = index;
+                newCell2.innerHTML = suggestionFunc.suggestions[index - 1];
+            } else {
+                newCell1.innerHTML = index;
+                newCell2.innerHTML = suggestionFunc.suggestions[index - 1];
+                document.getElementById("moreSugButton").style.display = "none";
+            }
+        }
+
+        function process() {
+            localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+            tableProcess(tableToJson(document.getElementById("database")));
+            suggestionFunc = getSuggestions();
+            document.getElementById('hidePart').style.display = "block";
+            var memberWithNumber = suggestionFunc.list;
+            memberWithNumber = shuffle(memberWithNumber);
+            var tableRef = document.getElementById('yourAns').getElementsByTagName('tbody')[0];
+            for (var i = 0; i < memberWithNumber.length; i++) {
+                newRow = tableRef.insertRow();
+                var newCell1 = newRow.insertCell(0),
+                    newCell2 = newRow.insertCell(1),
+                    newCell3 = newRow.insertCell(2);
+                newCell1.innerHTML = memberWithNumber[i][0];
+                newCell2.contentEditable = true;
+                newCell3.innerHTML = "<b class='ans' style='display: none'>" + (memberWithNumber[i][1] + 1) + "</b>";
+            }
+        }
+
+        function showAns() {
+            if (window.confirm("Bạn có chắc chắn muốn hiển thị đáp án?")) {
+                document.getElementById("showAnsButton").style.display = "none";
+                var allAns = document.getElementsByClassName('ans');
+                for (var i = 0; i < allAns.length; i++)
+                    allAns[i].style.display = "block";
+            }
+        }
+
+        function deleteRow() {
+            var index = prompt("Bạn muốn xóa người thứ mấy?", "");
+            if (index != null)
+                document.getElementById("database").deleteRow(index)
+            localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+        }
+
+        function addRow() {
+            var tableRef = document.getElementById('database').getElementsByTagName('tbody')[0],
+                newRow = tableRef.insertRow();
+            for (var i = 0; i < 16; i++) {
+                var newCell = newRow.insertCell(0);
+                newCell.contentEditable = true;
+            }
+            localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+        }
+
+        function tableToJson(table) {
+            var data = [];
+            var headers = [];
+            for (var i = 0; i < table.rows[0].cells.length; i++)
+                headers[i] = table.rows[0].cells[i].innerHTML;
+            for (var i = 1; i < table.rows.length; i++) {
+                var tableRow = table.rows[i];
+                var rowData = {};
+                for (var j = 0; j < tableRow.cells.length; j++)
+                    rowData[headers[j]] = tableRow.cells[j].innerHTML;
+                data.push(rowData);
+            }
+            return data;
+        }
+
+        function start() {
+            localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+            document.getElementById("startButton").style.display = "none";
+            document.getElementById("playAgainButton").style.display = "inline-block";
+            process();
+        }
+
+        function jsonToTable(list, tableId) {
+            list = JSON.parse(list);
+
+            var cols = [],
+                table = document.getElementById(tableId),
+                tr = table.insertRow(-1);
+
+            for (var i = 0; i < list.length; i++)
+                for (var k in list[i])
+                    if (cols.indexOf(k) === -1)
+                        cols.push(k);
+
+            $("#database tr").slice(1).remove();
+            cols.splice(-1, 1);
+
+            for (var i = 0; i < list.length; i++) {
+                trow = table.insertRow(-1);
+                for (var j = 0; j < cols.length; j++) {
+                    var cell = trow.insertCell(-1);
+                    cell.innerHTML = list[i][cols[j]];
+                    cell.contentEditable = true;
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            $('#database tr td').on('input', function() {
+                localStorage.setItem("database", JSON.stringify(tableToJson(document.getElementById("database"))));
+            })
+        })
+
+    </script>
+</body>
+
+</html>

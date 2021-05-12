@@ -1,0 +1,5 @@
+v2.5.5: New interface is already
+@petavietnam petavietnam released this on Sep 14, 2020 · 7 commits to master since this release
+
+Upgrade the interface for a simpler, easier to use, more accessible interface
+A interesting features - Customize background options via Url: Easy! Just add "?bgImg=", where "" is the address, link to your wallpaper.

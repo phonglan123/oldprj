@@ -1,0 +1,346 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#settingBox, #actionBox, #searchBox {
+    padding: 8px;
+    border: 1px solid #ccc;
+    right: 11px;
+    margin-top: -1px;
+    position: absolute;
+    background: white;
+    min-width: 200px;
+    width: calc(50% - 29px);
+    box-shadow: 0 0 8px 0 #ccc;
+    display: none;
+}
+
+#actionBox {
+    width: calc(25% - 26px);
+    margin-top: -9px;
+    min-width: 0;
+}
+
+#searchBox {
+    margin-top: -9px;
+}
+
+#preview, #sourcodeFrame {
+    border: 1px solid #ccc;
+    padding: 4px;
+    margin-top: -1px;
+    display: none;
+    height: 250px;
+    overflow: auto
+}
+
+#sourcodeFrame {
+    width: calc(100% - 10px);
+}
+
+#editBox {
+    max-width: 100%;
+    padding: 4px;
+    width: calc(100% - 12px);
+    border-top: none;
+    background: white;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    padding: 4px;
+    display: none;
+    overflow: auto;
+}
+
+#editQuestion, #searchInput {
+    padding: 5px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    font-size: 20px;
+    outline: none;
+    width: calc(100% - 123.5px);
+    display: inline-block;
+    margin-left: -5px;
+}
+
+#searchInput {
+    font-size: 16px;
+    margin: 0;
+    width: calc(100% - 12px);
+    margin-top: -1px;
+}
+
+#editTag {
+    padding: 5px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    font-size: 20px;
+    outline: none;
+    width: 100px;
+    display: inline-block;
+}
+
+#editContent, #outputData, #inputData {
+    resize: vertical;
+    width: calc(100% - 12px);
+    padding: 5px;
+    border: 1px solid #ccc;
+    margin-top: -17px;
+    height: 250px;
+    outline: none;
+    border-bottom: none;
+}
+
+#editTips {
+    margin-top: -5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: calc(100% - 12px);
+    border-top: none;
+    text-align: justify;
+}
+
+#reviewDifficult, #editDifficult, #chooseLanguage, #searchType, #searchColor {
+    padding: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: 100%;
+    border-top: none;
+    font-size: 18px;
+}
+
+#chooseLanguage, #searchType, #searchColor {
+    border-top: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+}
+
+#reviewDifficult {
+    font-size: 16px;
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+#editSave, #editCancel, #inputButton, #inputOutputClose {
+    margin-top: -4px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-size: 20px;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+#editSave, #editCancel {
+    margin-top: -1px;
+    width: calc(50% - 3px);
+}
+
+#editCancel {
+    width: calc(50% - 2.5px);
+}
+
+#editSave {
+    margin-right: 0.79px;
+}
+
+#controlButton button, #settingBox button, #searchBack {
+    margin-top: 4px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    width: calc((100% / 3) - 4px);
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+#controlButton #searchButton {
+    width: 100%;
+    margin-top: -1px;
+}
+
+#settingBox button, #actionBox button {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#selectAll, #unselectAll {
+    width: calc((100% / 2) - 3px) !important;
+}
+
+#unselectAll {
+    width: calc((100% / 2) - 2px) !important;
+}
+
+#searchBack {
+    width: 71px;
+}
+
+#action {
+    display: none;
+}
+
+button:active, #inputSave:active, #delete:active, #edit:active, #videoTitle:active, #reviewButton:active, #reviewStop:active, #reviewSave:active, #editSave:active, #editCancel:active, #inputButton:active, #inputOutputClose:active {
+    background: #ccc;
+    box-shadow: 0 0 10px 0 #ccc;
+}
+
+#list {
+    border: 1px solid #ccc;
+    width: calc(100% - 21px);
+    padding: 4px;
+    margin-top: -4px;
+    box-shadow: 0 0 8px 0 #ccc;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#delete, #edit {
+    padding: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 30px;
+    display: block;
+    cursor: pointer;
+    float: right;
+    margin-left: -1px;
+    text-align: center;
+}
+
+#question {
+    padding: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: calc(100% - 129px);
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: -1px;
+    cursor: pointer;
+}
+
+#tag {
+    cursor: pointer;
+    padding: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 71px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#videoTitle, #reviewButton, #reviewStop, #reviewSave, #inputOutputClose, #settingButton, #previewButton {
+    padding: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 100%;
+    display: block;
+    cursor: pointer;
+    outline: none;
+    background: #f0f0f0;
+}
+
+#previewButton {
+    width: calc(100% - 10px);
+    margin-top: -1px;
+}
+
+#videoTitle {
+    width: calc(50% - 4px);
+    display: inline-block;
+}
+
+#settingButton {
+    width: calc(50% - 3px);
+    display: inline-block;
+}
+
+#reviewStop, #reviewSave {
+    margin-top: -1px;
+    width: 100%;
+    display: inline-block;
+    margin-right: 0.79px;
+}
+
+#reviewQuestion {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+#reviewContent {
+    border: 1px solid #ccc;
+    margin-top: -1px;
+    padding: 4px;
+    display: none;
+    text-align: justify;
+    margin-bottom: 0px;
+    overflow: auto;
+}
+
+#keyword {
+    color: grey;
+    background-color: grey;
+    cursor: pointer;
+    padding: 1px;
+}
+
+#reviewBox, #inputOutputBox {
+    background: white;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    padding: 4px;
+    display: none;
+    overflow: auto;
+}
+
+#inputData {
+    border-bottom: 1px solid #ccc;
+    margin-top: 0;
+}
+
+#inputButton {
+    margin-top: -5px;
+    font-size: 16px;
+}
+
+#inputTitle {
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
+    padding: 4px;
+    font-size: 20px;
+}
+
+#outputTitle {
+    border: 1px solid #ccc;
+    margin-bottom: -1px;
+    padding: 4px;
+    font-size: 20px;
+    border-bottom: none;
+}
+
+#outputData {
+    border-bottom: 1px solid #ccc;
+    margin-top: -1px;
+    border-top: 1px solid #ccc;
+}
+
+#outputTips {
+    margin-top: -1px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: calc(100% - 12px);
+    text-align: justify;
+    border-top: none;
+    margin-top: -8px;
+}

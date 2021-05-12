@@ -1,0 +1,9 @@
+v2.0: Easier question management
+@petavietnam petavietnam released this on Jul 19, 2020 · 42 commits to master since this release
+
+Multiple choice: Choose multiple questions to perform actions such as deleting, tagging, and color marking to help you manage questions more quickly
+Color/tag: Mark categories or categories by tag or color level level by color. Let's try it
+Search: You're looking for a question in the mess of the question list? Please activate the search function by clicking on the Search button and enter your keyword there
+Language: We support 2 languages are Vietnamese and English. If you do not set a language, we will get your browser language to set. If your browser language is not in the supported languages ??list, we will automatically display English
+Preview what you have entered: When you enter something in textarea (input box), you can preview it by the button below the textarea.
+Correction of line breaks and a few problems

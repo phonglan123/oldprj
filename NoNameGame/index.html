@@ -1,0 +1,231 @@
+﻿<html>
+
+<head>
+    <style>
+        .otherGames {
+            height: 40px;
+            padding: 4px;
+            cursor: pointer;
+            user-select: none;
+            margin: 4px;
+            border: 1px solid #ccc;
+            width: 200px;
+        }
+
+        .otherGames:active {
+            box-shadow: 0 0 10px 0 #ccc;
+            background: #ccc;
+        }
+
+        .otherGames b {
+            margin-top: 10px;
+            position: absolute;
+            margin-left: 4px;
+        }
+
+        .otherGamesMoney {
+            height: 40px;
+            padding: 4px;
+            margin: 4px;
+            width: 200px;
+        }
+
+        .otherGamesMoney b {
+            margin-top: 10px;
+            position: absolute;
+            margin-left: 4px;
+        }
+
+        #ogFrameName {
+            float: right;
+            width: calc(100% - 259px);
+            margin: 4px;
+            border: 1px solid #ccc;
+            padding: 4px;
+            font-weight: bold;
+            height: 18px;
+        }
+
+        #ogIFRAME {
+            width: calc(100% - 224px);
+            float: right;
+            border: 1px solid #ccc;
+            margin: 4px;
+            margin-top: -5px;
+            height: calc(100% - 37px);
+        }
+
+        #ogFrameIMG {
+            height: 26px;
+            margin-left: 218px;
+            position: absolute;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            width: 26px;
+        }
+
+        #ogDiv {
+            border: 1px solid #ccc;
+            height: calc(100% - 16px);
+            width: calc(100% - 16px);
+            position: absolute;
+            background: white;
+            display: none;
+            z-index: 1;
+            box-shadow: 0 0 4px 0 #ccc;
+        }
+
+        .hideOGdiv {
+            animation-name: hideOGdiv;
+            animation-duration: 2s;
+            animation-fill-mode: both;
+        }
+
+        #ogMoney {
+            width: 162px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #ogMoney:hover {
+            z-index: 10;
+            text-overflow: clip;
+            width: auto;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 4px 0 #ccc;
+        }
+
+        @keyframes hideOGdiv {
+            100% {
+                height: 0;
+                display: none;
+                opacity: 0;
+                position: fixed;
+                margin-top: -1000px;
+            }
+        }
+
+        #gameDiv {
+            border: 1px solid #ccc;
+            height: 100px;
+            margin: 8px;
+            box-shadow: 0 0 4px 0 #ccc;
+            cursor: pointer;
+            padding: 4px;
+            text-align: justify;
+            user-select: none;
+        }
+
+        #gameDiv:active {
+            background: #ccc;
+            box-shadow: 0 0 10px 0 #ccc;
+        }
+
+        #topMenu {
+            box-shadow: 0 0 8px 0 #ccc;
+            border-bottom: 1px solid #ccc;
+            padding: 8px;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            width: calc(100% - 16px);
+            background: white;
+        }
+
+        #yourMoneyButton {
+            top: 1px;
+            border: 1px solid #ccc;
+            background: white;
+            outline: none;
+            left: -5px;
+            position: relative;
+            cursor: pointer
+        }
+
+        #yourMoneyButton:active {
+            background: #ccc;
+            box-shadow: 0 0 4px 0 #ccc;
+        }
+
+        #coccocGameIframe {
+            margin-left: -8px;
+            width: calc(100% + 16px);
+            height: calc(100% - 28px);
+            border: none;
+        }
+
+        #coccocGameClose {
+            border: 1px solid red;
+            padding: 4px;
+            position: fixed;
+            background: white;
+            color: red;
+            cursor: pointer;
+            user-select: none;
+            bottom: 10;
+        }
+
+        #coccocGameTip {
+            padding: 4px;
+            position: fixed;
+            bottom: 10;
+            left: 54;
+            color: #ccc;
+        }
+
+        #coccocGameClose:active {
+            background: red;
+            box-shadow: 0 0 4px 0 #ccc;
+            color: white;
+        }
+
+    </style>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <div id="ogDiv">
+        <img src="https://static.thenounproject.com/png/118652-200.png" id="ogFrameIMG" />
+        <div id="ogFrameName"> Hướng dẫn</div>
+        <iframe id="ogIFRAME" src="blankOgIframe.html"></iframe>
+        <div class="otherGamesMoney">
+            <img src="https://img.icons8.com/plasticine/2x/money.png" height="100%" /> <b id="ogMoney">Tiền của bạn: 16</b>
+        </div>
+        <div class="otherGames" onclick="ogShowFrame('gmsg')">
+            <img src="https://icons-for-free.com/iconfiles/png/512/gold+icon-1320184413669312446.png" height="100%" /> <b>Đào và đầu tư vàng</b>
+        </div>
+        <div class="otherGames" onclick="ogShowFrame('ls')">
+            <img src="https://www.playsmart.ca/wp-content/uploads/2019/03/8_BS_SpinningWheel-637x637-1.png" height="100%" /> <b>Vòng quay may mắn</b>
+        </div>
+        <div class="otherGames" onclick="ogShowFrame('mr')">
+            <img src="https://blacklabelagency.com/wp-content/uploads/2017/08/money-icon.png" height="100%" /> <b>Mưa tiền xu</b>
+        </div>
+        <div class="otherGames" onclick="ogShowFrame('tg')">
+            <img src="https://freeiconshop.com/wp-content/uploads/edd/clock-flat.png" height="100%" /> <b>Trò chơi thời gian</b>
+        </div>
+        <hr style="margin-left: 4px; border: none; background: #ccc; height: 1px;" />
+        <div class="otherGames" onclick="ogShowFrame('convert')">
+            <img src="https://icon-library.com/images/icon-convert/icon-convert-2.jpg" height="100%" /> <b>Chuyển đổi tiền</b>
+        </div>
+        <div class="otherGames" onclick="ogShowFrame('intro')">
+            <img src="https://icon-library.com/images/icon-close/icon-close-13.jpg" height="100%" /> <b>Thu nhỏ tab này</b>
+        </div>
+    </div>
+    <div id="topMenu">
+        <!-- <div id="adsframeDiv" style="margin-left: -100px;"></div> -->
+        <b id="yourMoney" style="border: 1px solid #ccc; padding: 4px;">Tiền của bạn: 16</b>
+        <button id="yourMoneyButton" onclick="document.getElementById('ogDiv').classList.remove('hideOGdiv'); document.getElementById('ogDiv').style.display='block';" title="Kiếm thêm tiền" style="font-size: 19.5;">+</button>
+        <font id="yourMoneyAlert">Bạn sẽ tiêu 0.1 tiền mỗi giây bạn chơi một trò chơi phía dưới. Bấm vào nút "+" để kiếm tiền!</font> <button id="yourMoneyButton" onclick="loadGames()" style="margin-left: 4px">Khởi tạo danh sách trò chơi</button>
+    </div>
+    <br /><br />
+    <iframe id="coccocGameIframe" style="display: none"></iframe>
+    <div id="coccocGameClose" onclick="toggleHideShowElm('coccocGameIframe', 'none');toggleHideShowElm('coccocGameClose', 'none');toggleHideShowElm('coccocGameTip', 'none');document.body.style.overflow = 'auto';clearInterval(gameInterval);document.getElementById('coccocGameIframe').src = '';" style="display: none">Đóng</div>
+    <div id="coccocGameTip" style="display: none"><i>Trò chơi được tham khảo từ Cốc Cốc Games</i></div>
+    <br />
+    Thể loại trò chơi: <select id="gameCategoriesSelect" onchange="writeCategory(this.value)"></select> (Lưu ý, nếu danh sách thể loại không hiện lên, hãy bấm khởi tạo. Sau khi chọn thể loại, bạn sẽ mất vài giây để load danh sách.)
+    <div id="gameDivList" style="text-align: center"></div>
+</body>
+
+</html>
